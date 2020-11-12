@@ -1,15 +1,14 @@
 {
 	"name": "escape",
 	"version": "1.0.1",
-	"description": "",
+	"description": "Discord Bot",
 	"main": "dist/index.js",
+	"author": "SUVAJIT <suvajit.me@gmail.com>",
+	"license": "MIT",
+	"private": "true",
 	"scripts": {
-		"start": "tsc && node .",
-		"test": "eslint --ext .ts --ignore-path .gitignore ."
+		"start": "tsc && node ."
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
 	"dependencies": {
 		"discord-akairo": "^8.1.0",
 		"discord.js": "^12.4.1",
