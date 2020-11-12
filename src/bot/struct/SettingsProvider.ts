@@ -1,5 +1,4 @@
-import { Mongo } from './Database';
-import { BSONType, Collection } from 'mongodb';
+import { BSONType, Collection, Db } from 'mongodb';
 import { Guild } from 'discord.js';
 
 interface Settings {
@@ -12,8 +11,8 @@ export default class SettingsProvider {
 
 	public settings = new Map();
 
-	public constructor() {
-		this.db = Mongo.db.collection('settings');
+	public constructor(db: Db) {
+		this.db = db.collection('settings');
 	}
 
 	public async init() {
@@ -24,7 +23,7 @@ export default class SettingsProvider {
 	}
 
 	public get<T>(guild: string | Guild, key: string, defaultValue: any): T {
-		const id = SettingsProvider.guildID(guild);
+		const id = (this.constructor as typeof SettingsProvider).guildID(guild);
 		if (this.settings.has(id)) {
 			const value = this.settings.get(id)[key];
 			return value == null ? defaultValue : value;
@@ -34,7 +33,7 @@ export default class SettingsProvider {
 	}
 
 	public async set(guild: string | Guild, key: string, value: any) {
-		const id = SettingsProvider.guildID(guild);
+		const id = (this.constructor as typeof SettingsProvider).guildID(guild);
 		const data = this.settings.get(id) || {};
 		data[key] = value;
 		this.settings.set(id, data);
@@ -42,7 +41,7 @@ export default class SettingsProvider {
 	}
 
 	public async delete(guild: string | Guild, key: string) {
-		const id = SettingsProvider.guildID(guild);
+		const id = (this.constructor as typeof SettingsProvider).guildID(guild);
 		const data = this.settings.get(id) || {};
 		delete data[key];
 
@@ -50,7 +49,7 @@ export default class SettingsProvider {
 	}
 
 	public async clear(guild: string | Guild) {
-		const id = SettingsProvider.guildID(guild);
+		const id = (this.constructor as typeof SettingsProvider).guildID(guild);
 		this.settings.delete(id);
 		return this.db.deleteOne({ id });
 	}

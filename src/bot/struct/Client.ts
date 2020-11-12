@@ -57,11 +57,10 @@ export default class Client extends AkairoClient {
 
 		await Connection.connect();
 		await Connection.createIndex();
-
-		this.settings = new SettingsProvider();
-		await this.settings.init();
-
 		this.db = Connection.db('escape');
+
+		this.settings = new SettingsProvider(this.db);
+		await this.settings.init();
 	}
 
 	public async start(token: string) {

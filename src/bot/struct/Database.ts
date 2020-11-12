@@ -1,4 +1,4 @@
-import { MongoClient, Db } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 class MongoDB extends MongoClient {
 	public constructor() {
@@ -21,10 +21,4 @@ class MongoDB extends MongoClient {
 
 const Connection = new MongoDB();
 
-class Mongo {
-	public static get db() {
-		return Connection.db('escape');
-	}
-}
-
-export { Connection, Mongo };
+export { Connection };
