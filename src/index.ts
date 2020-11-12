@@ -2,7 +2,7 @@ import Env from 'dotenv';
 
 Env.config();
 
-import Client from './src/struct/Client';
+import Client from './bot/struct/Client';
 
 const client = new Client();
 
