@@ -31,7 +31,7 @@ export default class Client extends AkairoClient {
 
 	public commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: path.join(__dirname, '..', 'commands'),
-		prefix: message => this.settings.get(message.guild!, 'prefix', '??'),
+		prefix: message => this.settings.get(message.guild!, 'prefix', '?'),
 		aliasReplacement: /-/g,
 		allowMention: true,
 		fetchMembers: true,
@@ -51,7 +51,9 @@ export default class Client extends AkairoClient {
 	});
 
 	public constructor() {
-		super({ ownerID: process.env.OWNER! });
+		super({ ownerID: process.env.OWNER! }, {
+			allowedMentions: { repliedUser: false }
+		});
 	}
 
 	private async init() {
