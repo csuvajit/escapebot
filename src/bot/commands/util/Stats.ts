@@ -1,7 +1,7 @@
-import moment from 'moment';
-import 'moment-duration-format';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
+import 'moment-duration-format';
+import moment from 'moment';
 import os from 'os';
 
 export default class StatsCommand extends Command {

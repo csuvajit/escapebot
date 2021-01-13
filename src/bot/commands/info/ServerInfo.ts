@@ -2,11 +2,7 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 import moment from 'moment';
 
-interface HumanLevels {
-	[key: string]: string;
-}
-
-const HUMAN_LEVELS: HumanLevels = {
+const HUMAN_LEVELS: { [key: string]: string } = {
 	NONE: 'None',
 	LOW: 'Low',
 	MEDIUM: 'Medium',

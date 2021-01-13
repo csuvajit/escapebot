@@ -2,11 +2,7 @@ import { Command, Argument } from 'discord-akairo';
 import { Message, User } from 'discord.js';
 import moment from 'moment';
 
-interface Devices {
-	[key: string]: string;
-}
-
-const DEVICES: Devices = { desktop: '🖥️', mobile: '📱', web: '🌐' };
+const DEVICES: { [key: string]: string } = { desktop: '🖥️', mobile: '📱', web: '🌐' };
 
 export default class UserInfoCommand extends Command {
 	public constructor() {

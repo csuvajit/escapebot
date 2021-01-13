@@ -1,6 +1,6 @@
+import { Reminder } from '../../struct/RemindScheduler';
 import { Command, Flag } from 'discord-akairo';
 import { Message, Util } from 'discord.js';
-import { Reminder } from '../../struct/RemindScheduler';
 import ms from 'ms';
 
 const REMINDER_LIMIT = 10;
