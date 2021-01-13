@@ -1,5 +1,5 @@
 import { Inhibitor } from 'discord-akairo';
-import { Message, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 
 export default class BlacklistInhibitor extends Inhibitor {
 	public constructor() {
