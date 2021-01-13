@@ -1,14 +1,20 @@
 import { AkairoClient, CommandHandler, ListenerHandler, InhibitorHandler } from 'discord-akairo';
 import SettingsProvider from './SettingsProvider';
+import RemindScheduler from './RemindScheduler';
 import { Connection } from './Database';
+import TagHandler from './TagHandler';
+import Logger from '../util/Logger';
 import { Db } from 'mongodb';
 import path from 'path';
 
 declare module 'discord-akairo' {
 	interface AkairoClient {
 		db: Db;
+		logger: Logger;
+		tags: TagHandler;
 		settings: SettingsProvider;
 		commandHandler: CommandHandler;
+		remindScheduler: RemindScheduler;
 	}
 }
 
@@ -17,9 +23,15 @@ export default class Client extends AkairoClient {
 
 	public settings!: SettingsProvider;
 
+	public tags!: TagHandler;
+
+	public logger: Logger = new Logger();
+
+	public remindScheduler!: RemindScheduler;
+
 	public commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: path.join(__dirname, '..', 'commands'),
-		prefix: message => this.settings.get(message.guild!, 'prefix', '?'),
+		prefix: message => this.settings.get(message.guild!, 'prefix', '??'),
 		aliasReplacement: /-/g,
 		allowMention: true,
 		fetchMembers: true,
@@ -55,12 +67,21 @@ export default class Client extends AkairoClient {
 		this.listenerHandler.loadAll();
 		this.inhibitorHandler.loadAll();
 
+		this.once('ready', () => this.run());
+
 		await Connection.connect();
-		await Connection.createIndex();
 		this.db = Connection.db('escape');
+		await Connection.createIndex(this.db);
 
 		this.settings = new SettingsProvider(this.db);
 		await this.settings.init();
+
+		this.tags = new TagHandler(this);
+		this.remindScheduler = new RemindScheduler(this);
+	}
+
+	private async run() {
+		await this.remindScheduler.init();
 	}
 
 	public async start(token: string) {

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 
 class MongoDB extends MongoClient {
 	public constructor() {
@@ -12,9 +12,10 @@ class MongoDB extends MongoClient {
 		return super.connect();
 	}
 
-	public async createIndex() {
+	public async createIndex(db: Db) {
 		return Promise.all([
-			this.db('escape').collection('settings').createIndex({ id: 1 }, { unique: true })
+			db.collection('settings').createIndex({ id: 1 }, { unique: true }),
+			db.collection('tags').createIndex({ name: 1, aliases: 1 }, { collation: { strength: 2, locale: 'en' } })
 		]);
 	}
 }
