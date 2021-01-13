@@ -10,6 +10,6 @@ export default class ReadyListener extends Listener {
 	}
 
 	public exec() {
-		console.log(`Ready ${this.client.user!.tag}`);
+		this.client.logger.info(`Ready ${this.client.user!.tag}`, { label: 'READY' });
 	}
 }
