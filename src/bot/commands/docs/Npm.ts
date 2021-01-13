@@ -43,7 +43,6 @@ export default class NPMCommand extends Command {
 		const maintainers = body.maintainers.slice(0, 10).map((user: any) => user.name).join(', ');
 		const dependencies = version.dependencies ? Object.keys(version.dependencies).slice(0, 10) : [];
 		const embed = new MessageEmbed()
-			.setColor(0xCB0000)
 			.setAuthor('NPM', 'https://i.imgur.com/ErKf5Y0.png', 'https://www.npmjs.com/')
 			.setTitle(body.name)
 			.setURL(`https://www.npmjs.com/package/${pkg}`)

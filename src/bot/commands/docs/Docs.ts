@@ -52,6 +52,7 @@ export default class DocsCommand extends Command {
 		).then(res => res.json()).catch(() => null);
 		if (!body) return message.util!.send('**No matches found!**');
 
+		delete body.color;
 		const embed = new MessageEmbed(body);
 		if (message.channel.type === 'dm' || !(message.channel as TextChannel)!.permissionsFor(message.guild!.me!)!.has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
 			return message.util!.send({ embed });
