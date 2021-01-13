@@ -15,8 +15,10 @@ export default class StatsCommand extends Command {
 	}
 
 	public async exec(message: Message) {
+		const user = await this.client.users.fetch(this.client.ownerID as string);
 		const embed = this.client.util.embed()
 			.setAuthor(this.client.user!.tag, this.client.user!.displayAvatarURL())
+			.setThumbnail(this.client.user!.displayAvatarURL())
 			.setTitle('Stats')
 			.setDescription([
 				'**Memory Usage**',
@@ -34,9 +36,10 @@ export default class StatsCommand extends Command {
 				'**Users**',
 				`${this.client.users.cache.size}`,
 				'',
-				'**Node.js**',
-				`${process.version}`
-			]);
+				'**Source Code**',
+				`[View on GitHub](https://github.com/csuvajit/escapebot)`
+			])
+			.setFooter(`© ${new Date().getFullYear()} ${user.tag}`, user.displayAvatarURL({ dynamic: true }));
 
 		return message.util!.send({ embed });
 	}
