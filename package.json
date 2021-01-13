@@ -1,14 +1,15 @@
 {
 	"name": "escape",
 	"version": "1.0.1",
-	"description": "Discord Bot",
+	"description": "Discord Moderation Bot",
 	"main": "dist/index.js",
 	"author": "SUVAJIT <suvajit.me@gmail.com>",
 	"license": "MIT",
 	"private": "true",
 	"scripts": {
+		"build": "tsc",
 		"start": "tsc && node .",
-		"test": "eslint src --ext ts --fix"
+		"test": "eslint --fix --ext .ts --ignore-path .gitignore ."
 	},
 	"dependencies": {
 		"chalk": "^4.1.0",
