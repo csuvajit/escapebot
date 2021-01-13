@@ -1,29 +1,24 @@
 {
 	"compilerOptions": {
 		"lib": [
-			"ES2020",
-			"esnext",
-			"esnext.array",
-			"esnext.asynciterable",
-			"esnext.intl",
-			"esnext.symbol"
+			"ES2020"
 		],
-		"module": "CommonJS",
-		"target": "ES2020",
-		"esModuleInterop": true,
-		"resolveJsonModule": true,
-		"skipLibCheck": true,
-		"forceConsistentCasingInFileNames": true,
+		"pretty": true,
+		"strict": true,
 		"outDir": "dist/",
 		"rootDir": "src/",
-		"strict": true,
-		"moduleResolution": "node",
+		"target": "ES2020",
+		"module": "CommonJS",
 		"declaration": false,
-		"removeComments": false,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
 		"alwaysStrict": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"removeComments": false,
+		"resolveJsonModule": true,
+		"moduleResolution": "node",
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
 		"allowSyntheticDefaultImports": true,
-		"pretty": true
+		"forceConsistentCasingInFileNames": true
 	}
 }
