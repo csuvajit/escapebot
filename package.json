@@ -12,6 +12,7 @@
 		"test": "eslint --fix --ext .ts --ignore-path .gitignore ."
 	},
 	"dependencies": {
+		"@sentry/node": "^5.30.0",
 		"chalk": "^4.1.0",
 		"discord-akairo": "^8.1.0",
 		"discord.js": "github:discordjs/discord.js",
