@@ -22,16 +22,18 @@ export default class PrefixCommand extends Command {
 		});
 	}
 
-	// @ts-ignore
+	// @ts-expect-error
 	public regex() {
 		return new RegExp(`^<@!?(${this.client.user!.id})>$`, 'i');
 	}
 
-	public exec(message: Message, { prefix }: { prefix: string | null }) {
+	public exec(message: Message, { prefix, match }: { prefix: string | null; match: string }) {
 		if (/^<@!?(\d+)>$/.test(message.content) && !message.mentions.has(this.client.user!.id)) return;
 
 		if (!prefix) {
-			return message.util!.send(`The current prefix for this server is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``);
+			return match
+				? message.reply(`My prefix is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``)
+				: message.channel.send(`My prefix is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``);
 		}
 
 		if (prefix && !message.member!.permissions.has('MANAGE_GUILD')) {
