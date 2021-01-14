@@ -35,11 +35,7 @@ export default class ServerInfoCommand extends Command {
 		};
 
 		const hoisted = yield {
-			type: (message: Message) => {
-				const permission = message.member!.permissions.has('MANAGE_GUILD');
-				if (!permission) return false;
-				return true;
-			},
+			type: (msg: Message) => msg.member!.permissions.has('MANAGE_GUILD'),
 			match: 'flag',
 			flag: ['--pin']
 		};
