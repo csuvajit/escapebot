@@ -1,8 +1,9 @@
 import { COLLECTION } from '../util/Constants';
-import { Collection } from 'mongodb';
+import { Collection, ObjectId } from 'mongodb';
 import Client from './Client';
 
 export interface Tag {
+	_id?: ObjectId;
 	name: string;
 	aliases: string[];
 	user: string;
@@ -59,5 +60,9 @@ export default class TagHandler {
 			},
 			{ collation: { strength: 2, locale: 'en' } }
 		);
+	}
+
+	public uses(_id: ObjectId) {
+		return this.db.updateOne({ _id }, { $inc: { uses: 1 } });
 	}
 }

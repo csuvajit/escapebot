@@ -22,7 +22,7 @@ export default class NPMCommand extends Command {
 						start: 'What would you like to search for?'
 					},
 					match: 'content',
-					type: (msg, pkg) => pkg ? encodeURIComponent(pkg.toLocaleLowerCase().replace(/ /g, '-')) : null
+					type: (msg, pkg) => pkg ? encodeURIComponent(pkg.toLocaleLowerCase().replace(/ +/g, '-')) : null
 				}
 			]
 		});

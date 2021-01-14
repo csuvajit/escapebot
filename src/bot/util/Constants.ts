@@ -1,5 +1,6 @@
 export const COLLECTION = {
 	REMINDERS: 'reminders',
 	SETTINGS: 'settings',
-	TAGS: 'tags'
+	TAGS: 'tags',
+	CASES: 'cases'
 };

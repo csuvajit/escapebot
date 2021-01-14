@@ -2,7 +2,7 @@ import moment from 'moment';
 import chalk from 'chalk';
 import util from 'util';
 
-const COLORS: { [key: string]: string } = {
+const COLORS: { [key: string]: 'red' | 'cyan' | 'yellow' | 'magenta' } = {
 	debug: 'yellow',
 	info: 'cyan',
 	warn: 'magenta',
@@ -37,8 +37,7 @@ export default class Logger {
 		const timestamp = chalk.cyan(moment().utcOffset('+05:30').format('DD-MM-YYYY kk:mm:ss'));
 		const content = this.clean(message);
 		const stream = error ? process.stderr : process.stdout;
-		const color = COLORS[tag] as 'red' | 'cyan' | 'yellow' | 'magenta';
-		stream.write(`[${timestamp}] [SHARD 0] ${chalk[color].bold(TAGS[tag])} » ${label ? `[${label}] » ` : ''}${content}\n`);
+		stream.write(`[${timestamp}] [SHARD 0] ${chalk[COLORS[tag]].bold(TAGS[tag])} » ${label ? `[${label}] » ` : ''}${content}\n`);
 	}
 
 	private static clean(message: string | any) {
