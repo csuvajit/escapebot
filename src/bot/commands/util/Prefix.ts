@@ -32,9 +32,8 @@ export default class PrefixCommand extends Command {
 		if (/^<@!?(\d+)>$/.test(message.content) && !message.mentions.has(this.client.user!.id)) return;
 
 		if (!prefix) {
-			return match
-				? message.reply(`My prefix is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``)
-				: message.channel.send(`My prefix is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``);
+			const reply = match ? message.reply.bind(message) : message.channel.send.bind(message.channel);
+			return reply(`My prefix is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``);
 		}
 
 		if (prefix && !message.member!.permissions.has('MANAGE_GUILD')) {
