@@ -1,4 +1,5 @@
 import { BSONType, Collection, Db } from 'mongodb';
+import { COLLECTION } from '../util/Constants';
 import { Guild } from 'discord.js';
 
 interface Settings {
@@ -12,7 +13,7 @@ export default class SettingsProvider {
 	public settings = new Map();
 
 	public constructor(db: Db) {
-		this.db = db.collection('settings');
+		this.db = db.collection(COLLECTION.SETTINGS);
 	}
 
 	public async init() {

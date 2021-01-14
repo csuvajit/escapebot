@@ -8,6 +8,7 @@ export default class PrefixCommand extends Command {
 			category: 'config',
 			channel: 'guild',
 			quoted: false,
+			typing: true,
 			description: {
 				content: 'Displays or changes the prefix.',
 				usage: '<prefix>',

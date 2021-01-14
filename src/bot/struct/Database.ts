@@ -1,3 +1,4 @@
+import { COLLECTION } from '../util/Constants';
 import { MongoClient, Db } from 'mongodb';
 
 class MongoDB extends MongoClient {
@@ -14,8 +15,8 @@ class MongoDB extends MongoClient {
 
 	public async createIndex(db: Db) {
 		return Promise.all([
-			db.collection('settings').createIndex({ id: 1 }, { unique: true }),
-			db.collection('tags').createIndex({ name: 1, aliases: 1 }, { collation: { strength: 2, locale: 'en' } })
+			db.collection(COLLECTION.SETTINGS).createIndex({ id: 1 }, { unique: true }),
+			db.collection(COLLECTION.TAGS).createIndex({ name: 1, aliases: 1 }, { collation: { strength: 2, locale: 'en' } })
 		]);
 	}
 }

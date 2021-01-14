@@ -1,5 +1,6 @@
-import Client from './Client';
+import { COLLECTION } from '../util/Constants';
 import { Collection } from 'mongodb';
+import Client from './Client';
 
 export interface Tag {
 	name: string;
@@ -18,7 +19,7 @@ export default class TagHandler {
 	protected db: Collection<Tag>;
 
 	public constructor(private readonly client: Client) {
-		this.db = this.client.db.collection('tags');
+		this.db = this.client.db.collection(COLLECTION.TAGS);
 	}
 
 	public async create(tag: Tag) {

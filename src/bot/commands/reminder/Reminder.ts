@@ -9,7 +9,7 @@ export default class ReminderCommand extends Command {
 	public constructor() {
 		super('reminder', {
 			aliases: ['remind', 'reminder'],
-			category: 'info',
+			category: 'util',
 			clientPermissions: ['EMBED_LINKS']
 		});
 	}

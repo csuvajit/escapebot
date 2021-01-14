@@ -1,6 +1,8 @@
-import Client from './Client';
 import { Collection, ObjectId } from 'mongodb';
+import { COLLECTION } from '../util/Constants';
 import { TextChannel } from 'discord.js';
+import Client from './Client';
+
 
 export interface Reminder {
 	_id?: ObjectId;
@@ -21,7 +23,7 @@ export default class RemindScheduler {
 
 	public constructor(private readonly client: Client) {
 		this.refreshRate = 5 * 60 * 1000;
-		this.db = this.client.db.collection('reminders');
+		this.db = this.client.db.collection(COLLECTION.REMINDERS);
 	}
 
 	public async create(reminder: Reminder) {
