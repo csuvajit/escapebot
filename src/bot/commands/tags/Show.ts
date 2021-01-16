@@ -1,5 +1,5 @@
 import { Command, Flag } from 'discord-akairo';
-import { Tag } from '../../struct/TagHandler';
+import { Tag } from '../../struct/TagsProvider';
 import { Util, Message } from 'discord.js';
 
 export default class TagShowCommand extends Command {

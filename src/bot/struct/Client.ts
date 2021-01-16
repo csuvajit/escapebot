@@ -2,7 +2,7 @@ import { AkairoClient, CommandHandler, ListenerHandler, InhibitorHandler } from 
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
 import { Connection } from './Database';
-import TagHandler from './TagHandler';
+import TagsProvider from './TagsProvider';
 import Logger from '../util/Logger';
 import { Db } from 'mongodb';
 import path from 'path';
@@ -11,7 +11,7 @@ declare module 'discord-akairo' {
 	interface AkairoClient {
 		db: Db;
 		logger: Logger;
-		tags: TagHandler;
+		tags: TagsProvider;
 		settings: SettingsProvider;
 		commandHandler: CommandHandler;
 		remindScheduler: RemindScheduler;
@@ -21,9 +21,9 @@ declare module 'discord-akairo' {
 export default class Client extends AkairoClient {
 	public db!: Db;
 
-	public settings!: SettingsProvider;
+	public tags!: TagsProvider;
 
-	public tags!: TagHandler;
+	public settings!: SettingsProvider;
 
 	public logger: Logger = new Logger();
 
@@ -78,7 +78,7 @@ export default class Client extends AkairoClient {
 		this.settings = new SettingsProvider(this.db);
 		await this.settings.init();
 
-		this.tags = new TagHandler(this);
+		this.tags = new TagsProvider(this);
 		this.remindScheduler = new RemindScheduler(this);
 	}
 

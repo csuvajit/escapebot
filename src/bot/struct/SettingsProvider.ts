@@ -3,24 +3,22 @@ import { COLLECTION } from '../util/Constants';
 import { Guild } from 'discord.js';
 
 interface Settings {
-	id: string;
+	guild: string;
 	settings: BSONType;
 }
 
 export default class SettingsProvider {
-	protected db: Collection<Settings>;
+	protected collection: Collection<Settings>;
 
 	public settings = new Map();
 
 	public constructor(db: Db) {
-		this.db = db.collection(COLLECTION.SETTINGS);
+		this.collection = db.collection(COLLECTION.SETTINGS);
 	}
 
 	public async init() {
-		const settings = await this.db.find().toArray();
-		for (const data of settings) {
-			this.settings.set(data.id, data.settings);
-		}
+		await this.collection.find()
+			.forEach(data => this.settings.set(data.guild, data.settings));
 	}
 
 	public get<T>(guild: string | Guild, key: string, defaultValue: any): T {
@@ -39,7 +37,7 @@ export default class SettingsProvider {
 		const data = this.settings.get(id) || {};
 		data[key] = value;
 		this.settings.set(id, data);
-		return this.db.updateOne({ id }, { $set: { settings: data } }, { upsert: true });
+		return this.collection.updateOne({ guild: id }, { $set: { settings: data } }, { upsert: true });
 	}
 
 	public async delete(guild: string | Guild, key: string) {
@@ -47,13 +45,13 @@ export default class SettingsProvider {
 		const data = this.settings.get(id) || {};
 		delete data[key]; // eslint-disable-line
 
-		return this.db.updateOne({ id }, { $set: { settings: data } });
+		return this.collection.updateOne({ guild: id }, { $set: { settings: data } });
 	}
 
 	public async clear(guild: string | Guild) {
 		const id = (this.constructor as typeof SettingsProvider).guildID(guild);
 		this.settings.delete(id);
-		return this.db.deleteOne({ id });
+		return this.collection.deleteOne({ guild: id });
 	}
 
 	private static guildID(guild: string | Guild) {

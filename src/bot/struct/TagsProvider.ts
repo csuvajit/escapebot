@@ -16,15 +16,15 @@ export interface Tag {
 	lastModified: string;
 }
 
-export default class TagHandler {
-	protected db: Collection<Tag>;
+export default class TagsProvider {
+	protected collection: Collection<Tag>;
 
 	public constructor(private readonly client: Client) {
-		this.db = this.client.db.collection(COLLECTION.TAGS);
+		this.collection = this.client.db.collection(COLLECTION.TAGS);
 	}
 
 	public async create(tag: Tag) {
-		await this.db.insertOne({
+		await this.collection.insertOne({
 			name: tag.name,
 			aliases: [tag.name],
 			user: tag.user,
@@ -40,7 +40,7 @@ export default class TagHandler {
 
 	public async delete(name: string, guild: string) {
 		const tag = name.toLowerCase();
-		return this.db.deleteOne(
+		return this.collection.deleteOne(
 			{
 				$and: [
 					{ guild },
@@ -51,7 +51,7 @@ export default class TagHandler {
 	}
 
 	public async find(name: string, guild: string) {
-		return this.db.findOne(
+		return this.collection.findOne(
 			{
 				$and: [
 					{ guild },
@@ -63,6 +63,6 @@ export default class TagHandler {
 	}
 
 	public uses(_id: ObjectId) {
-		return this.db.updateOne({ _id }, { $inc: { uses: 1 } });
+		return this.collection.updateOne({ _id }, { $inc: { uses: 1 } });
 	}
 }

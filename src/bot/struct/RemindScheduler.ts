@@ -5,7 +5,7 @@ import Client from './Client';
 
 
 export interface Reminder {
-	_id?: ObjectId;
+	_id: ObjectId;
 	user: string;
 	dm: boolean;
 	channel: string;
@@ -16,18 +16,18 @@ export interface Reminder {
 }
 
 export default class RemindScheduler {
-	protected db!: Collection<Reminder>;
+	protected collection!: Collection<Reminder>;
 
 	private readonly refreshRate: number;
 	private readonly queued = new Map();
 
 	public constructor(private readonly client: Client) {
 		this.refreshRate = 5 * 60 * 1000;
-		this.db = this.client.db.collection(COLLECTION.REMINDERS);
+		this.collection = this.client.db.collection(COLLECTION.REMINDERS);
 	}
 
-	public async create(reminder: Reminder) {
-		const { insertedId } = await this.db.insertOne({
+	public async create(reminder: Omit<Reminder, '_id'>) {
+		const { insertedId } = await this.collection.insertOne({
 			user: reminder.user,
 			dm: reminder.dm,
 			channel: reminder.channel,
@@ -44,7 +44,7 @@ export default class RemindScheduler {
 
 	public queue(reminder: Reminder) {
 		this.queued.set(
-			reminder._id!.toHexString(),
+			reminder._id.toHexString(),
 			this.client.setTimeout(() => {
 				this.trigger(reminder);
 			}, reminder.triggersAt.getTime() - Date.now())
@@ -52,16 +52,16 @@ export default class RemindScheduler {
 	}
 
 	public cancel(reminder: Reminder) {
-		const timeoutId = this.queued.get(reminder._id!.toHexString());
+		const timeoutId = this.queued.get(reminder._id.toHexString());
 		if (timeoutId) this.client.clearTimeout(timeoutId);
-		return this.queued.delete(reminder._id!.toHexString());
+		return this.queued.delete(reminder._id.toHexString());
 	}
 
 	public async delete(reminder: Reminder) {
-		const timeoutId = this.queued.get(reminder._id!.toHexString());
+		const timeoutId = this.queued.get(reminder._id.toHexString());
 		if (timeoutId) this.client.clearTimeout(timeoutId);
-		this.queued.delete(reminder._id!.toHexString());
-		return this.db.deleteOne({ _id: reminder._id });
+		this.queued.delete(reminder._id.toHexString());
+		return this.collection.deleteOne({ _id: reminder._id });
 	}
 
 	public async trigger(reminder: Reminder) {
@@ -95,13 +95,13 @@ export default class RemindScheduler {
 	}
 
 	private async _refresh() {
-		const reminders = await this.db.find({
+		const reminders = await this.collection.find({
 			triggersAt: { $lt: new Date(Date.now() + this.refreshRate) }
 		}).toArray();
 
 		const now = new Date();
 		for (const reminder of reminders) {
-			if (this.queued.has(reminder._id!.toHexString())) continue;
+			if (this.queued.has(reminder._id.toHexString())) continue;
 
 			if (reminder.triggersAt < now) {
 				this.trigger(reminder);
