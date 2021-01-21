@@ -1,8 +1,11 @@
 import { AkairoClient, CommandHandler, ListenerHandler, InhibitorHandler } from 'discord-akairo';
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
-import { Connection } from './Database';
+import MuteScheduler from './MuteScheduler';
 import TagsProvider from './TagsProvider';
+import CaseHandler from './CaseHandler';
+import Interaction from './Interaction';
+import { Connection } from './Database';
 import Logger from '../util/Logger';
 import { Db } from 'mongodb';
 import path from 'path';
@@ -12,9 +15,11 @@ declare module 'discord-akairo' {
 		db: Db;
 		logger: Logger;
 		tags: TagsProvider;
+		cases: CaseHandler;
+		mutes: MuteScheduler;
 		settings: SettingsProvider;
+		reminders: RemindScheduler;
 		commandHandler: CommandHandler;
-		remindScheduler: RemindScheduler;
 	}
 }
 
@@ -23,11 +28,15 @@ export default class Client extends AkairoClient {
 
 	public tags!: TagsProvider;
 
+	public cases!: CaseHandler;
+
+	public mutes!: MuteScheduler;
+
+	public reminders!: RemindScheduler;
+
 	public settings!: SettingsProvider;
 
 	public logger: Logger = new Logger();
-
-	public remindScheduler!: RemindScheduler;
 
 	public commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: path.join(__dirname, '..', 'commands'),
@@ -36,10 +45,10 @@ export default class Client extends AkairoClient {
 		allowMention: true,
 		fetchMembers: true,
 		commandUtil: true,
-		commandUtilLifetime: 3e5,
-		commandUtilSweepInterval: 9e5,
 		handleEdits: true,
-		defaultCooldown: 3000
+		defaultCooldown: 3000,
+		commandUtilLifetime: 3e5,
+		commandUtilSweepInterval: 9e5
 	});
 
 	public listenerHandler = new ListenerHandler(this, {
@@ -52,7 +61,15 @@ export default class Client extends AkairoClient {
 
 	public constructor() {
 		super({ ownerID: process.env.OWNER! }, {
-			allowedMentions: { repliedUser: false }
+			allowedMentions: { repliedUser: false, parse: ['users'] }
+		});
+
+		// @ts-expect-error
+		this.ws.on('INTERACTION_CREATE', async res => {
+			const command = this.commandHandler.modules.get(res.data?.name);
+			if (!command) return;
+			const interaction = await new Interaction(this, res).parse(this, res);
+			return this.commandHandler.handleInteractionCommand(interaction, command);
 		});
 	}
 
@@ -79,11 +96,14 @@ export default class Client extends AkairoClient {
 		await this.settings.init();
 
 		this.tags = new TagsProvider(this);
-		this.remindScheduler = new RemindScheduler(this);
+		this.cases = new CaseHandler(this);
+		this.mutes = new MuteScheduler(this);
+		this.reminders = new RemindScheduler(this);
 	}
 
 	private async run() {
-		await this.remindScheduler.init();
+		await this.mutes.init();
+		await this.reminders.init();
 	}
 
 	public async start(token: string) {

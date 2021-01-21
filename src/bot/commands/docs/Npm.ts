@@ -10,6 +10,7 @@ export default class NPMCommand extends Command {
 			aliases: ['npm', 'npm-package'],
 			category: 'docs',
 			clientPermissions: ['EMBED_LINKS'],
+			typing: true,
 			description: {
 				content: 'Responds with information on an NPM package.',
 				usage: '<query>',

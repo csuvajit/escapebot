@@ -42,21 +42,21 @@ export default class ReminderAddCommand extends Command {
 	}
 
 	public async exec(message: Message, { duration, reason, dm }: { duration: number; reason: string; dm: boolean }) {
-		const Reminders = await this.client.db.collection<Reminder>('reminders').countDocuments({ user: message.author.id });
-		if (Reminders > REMINDER_LIMIT) {
+		const reminders = await this.client.db.collection<Reminder>('reminders').countDocuments({ user: message.author.id });
+		if (reminders > REMINDER_LIMIT) {
 			return message.util!.send('**You already have too many reminders!**');
 		}
 
-		await this.client.remindScheduler.create({
+		await this.client.reminders.create({
 			user: message.author.id,
 			channel: message.channel.id,
 			reason: Util.cleanContent(reason, message),
 			reference: message.url,
-			triggersAt: new Date(Date.now() + duration),
+			duration: new Date(Date.now() + duration),
 			dm: message.channel.type === 'dm' || dm,
 			createdAt: new Date()
 		});
 
-		return message.util!.send(`I'll remind you in ${ms(duration, { 'long': true })}`);
+		return message.util!.send(`**I'll remind you in ${ms(duration, { 'long': true })}**`);
 	}
 }

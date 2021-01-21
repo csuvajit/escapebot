@@ -9,6 +9,7 @@ export default class DocsCommand extends Command {
 			aliases: ['docs'],
 			category: 'docs',
 			clientPermissions: ['EMBED_LINKS'],
+			typing: true,
 			description: {
 				content: 'Searches discord.js and discord-akairo documentation.',
 				usage: '<query>',

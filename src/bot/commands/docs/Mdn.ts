@@ -33,8 +33,9 @@ export default class MDNCommand extends Command {
 	public async exec(message: Message, { query, match }: { query: string; match: string }) {
 		if (!query && match) query = match[1];
 
+		const param = qs.stringify({ topic: 'js', highlight: false, q: query, per_page: 50 });
 		const body: Mdn = await fetch(
-			`https://developer.mozilla.org/api/v1/search/en-US?${qs.stringify({ topic: 'js', highlight: false, q: query })}`
+			`https://developer.mozilla.org/api/v1/search/en-US?${param}`
 		).then(res => res.json()).catch(() => null);
 
 		let data = body.documents.filter(en => en.slug.startsWith('Web/JavaScript'))
