@@ -1,7 +1,7 @@
 {
 	"name": "escape",
 	"version": "1.0.1",
-	"description": "Discord Moderation Bot",
+	"description": "Discord Moderation and Utility Bot",
 	"main": "dist/index.js",
 	"author": "SUVAJIT <suvajit.me@gmail.com>",
 	"license": "MIT",
