@@ -9,9 +9,11 @@ export default class PingCommand extends Command {
 			channel: 'guild',
 			typing: true,
 			description: {
-				content: 'Pings me!'
+				content: 'Bans a user from the guild.',
+				usage: '<user> [reason] [--days]',
+				examples: ['@Suvajit DM ads --days 7']
 			},
-			optionFlags: ['--user', '--reason', '--days']
+			optionFlags: ['--user', '--reason', '--days', '-d']
 		});
 	}
 
@@ -33,13 +35,13 @@ export default class PingCommand extends Command {
 		const days = yield {
 			match: 'option',
 			type: 'number',
-			flag: '--days'
+			flag: ['--days', '-d']
 		};
 
 		return { user, reason, days };
 	}
 
 	public exec(message: Message | Interaction, args: any) {
-		console.log(message, args);
+		console.log(args);
 	}
 }

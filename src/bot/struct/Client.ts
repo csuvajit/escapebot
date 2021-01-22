@@ -69,7 +69,7 @@ export default class Client extends AkairoClient {
 			const command = this.commandHandler.modules.get(res.data?.name);
 			if (!command) return;
 			const interaction = await new Interaction(this, res).parse(this, res);
-			return this.commandHandler.handleInteractionCommand(interaction, command);
+			return this.commandHandler.handleInteractionCommand(interaction, command, interaction.options);
 		});
 	}
 

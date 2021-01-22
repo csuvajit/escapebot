@@ -10,7 +10,10 @@ export default class StatsCommand extends Command {
 			aliases: ['stats'],
 			category: 'util',
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS']
+			clientPermissions: ['EMBED_LINKS'],
+			description: {
+				content: 'Shows some basic statistics about the bot.'
+			}
 		});
 	}
 
@@ -41,6 +44,6 @@ export default class StatsCommand extends Command {
 			])
 			.setFooter(`© ${new Date().getFullYear()} ${user.tag}`, user.displayAvatarURL({ dynamic: true }));
 
-		return message.util!.send({ embed });
+		return this.send(message, { embed });
 	}
 }

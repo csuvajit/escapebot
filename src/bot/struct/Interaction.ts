@@ -30,6 +30,10 @@ export default class Interaction {
 		return Boolean(this.type === 2);
 	}
 
+	public get options() {
+		return this.data?.options ?? [];
+	}
+
 	public async parse(client: Client, data: APIInteraction) {
 		this.author = await client.users.fetch(data.member.user.id);
 		this.member = await this.guild.members.fetch(data.member.user.id);
