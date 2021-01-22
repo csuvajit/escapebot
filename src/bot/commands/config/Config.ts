@@ -138,6 +138,7 @@ export default class ConfigCommand extends Command {
 	public *args() {
 		const sub = yield {
 			type: [
+				['config-refresh', 'refresh'],
 				['config-enable', 'enable', 'set'],
 				['config-disable', 'disable', 'del']
 			],
