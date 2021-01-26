@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord-api-types/v8';
 import { Flag, Command } from 'discord-akairo';
 
-const applicationCommand = {
+const interaction = {
 	name: 'config',
 	description: 'Enable and disable features on the guild',
 	options: [
@@ -113,9 +113,10 @@ export default class ConfigCommand extends Command {
 			category: 'config',
 			clientPermissions: ['EMBED_LINKS'],
 			typing: true,
+			interaction: interaction,
 			description: {
 				content: [
-					`${applicationCommand.description}`,
+					`${interaction.description}`,
 					'',
 					'**Methods**',
 					'• set `<key> <...arguments>`',
@@ -130,8 +131,7 @@ export default class ConfigCommand extends Command {
 				],
 				usage: '<method> <...arguments>',
 				examples: []
-			},
-			interaction: applicationCommand
+			}
 		});
 	}
 

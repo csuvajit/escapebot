@@ -6,8 +6,8 @@ export default class ConfigRefreshCommand extends Command {
 		super('config-refresh', {
 			aliases: ['refresh'],
 			category: 'config',
-			clientPermissions: ['EMBED_LINKS'],
 			typing: true,
+			ownerOnly: true,
 			description: {}
 		});
 	}

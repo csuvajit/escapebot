@@ -1,6 +1,19 @@
+import { ApplicationCommandOptionType } from 'discord-api-types/v8';
 import Interaction from '../../struct/Interaction';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
+
+const interaction = {
+	name: 'ping',
+	description: 'Health check',
+	options: [
+		{
+			name: 'hide',
+			description: 'Hides the output',
+			type: ApplicationCommandOptionType.BOOLEAN
+		}
+	]
+};
 
 export default class PingCommand extends Command {
 	public constructor() {
@@ -8,6 +21,7 @@ export default class PingCommand extends Command {
 			aliases: ['ping'],
 			channel: 'guild',
 			typing: true,
+			interaction,
 			description: {
 				content: 'Pings me!'
 			},
