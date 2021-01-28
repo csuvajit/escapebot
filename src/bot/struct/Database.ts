@@ -16,6 +16,7 @@ class MongoDB extends MongoClient {
 	public async createIndex(db: Db) {
 		return Promise.all([
 			db.collection(COLLECTION.SETTINGS).createIndex({ guild: 1 }, { unique: true }),
+			db.collection(COLLECTION.TAGS).createIndex({ name: 'text', aliases: 'text' }),
 			db.collection(COLLECTION.TAGS).createIndex({ name: 1, aliases: 1 }, { collation: { strength: 2, locale: 'en' } })
 		]);
 	}

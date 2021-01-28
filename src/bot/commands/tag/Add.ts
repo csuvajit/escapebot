@@ -1,19 +1,22 @@
 import { Command, Flag } from 'discord-akairo';
 import { Message, Util } from 'discord.js';
 
-export default class ServerInfoCommand extends Command {
+export default class TagAddCommand extends Command {
 	public constructor() {
-		super('add', {
-			aliases: ['add'],
-			category: 'info',
+		super('tag-add', {
+			category: 'tag',
 			channel: 'guild',
 			clientPermissions: ['EMBED_LINKS'],
-			flags: ['--pin']
+			flags: ['--pin'],
+			optionFlags: ['--name', '--content']
 		});
 	}
 
-	public *args() {
+	public *args(message: Message) {
+		const slash = this.isInteraction(message);
+
 		const name = yield {
+			match: slash ? 'option' : 'phrase',
 			type: async (msg: Message, name: string) => {
 				if (!name) return null;
 				const tag = await this.client.tags.find(name, msg.guild!.id);
@@ -23,15 +26,14 @@ export default class ServerInfoCommand extends Command {
 			prompt: {
 				start: 'What should be the name of tag?',
 				retry: (msg: Message, { failure }: { failure: { value: string } }) => `Tag with the name **${failure.value}** already exists. Try another name?`
-			}
+			},
+			flag: '--name'
 		};
 
 		const content = yield {
-			match: 'rest',
+			match: slash ? 'option' : 'rest',
 			type: 'string',
-			prompt: {
-				start: 'What should be the content of tag?'
-			}
+			flag: '--content'
 		};
 
 		const hoisted = yield {
@@ -57,7 +59,7 @@ export default class ServerInfoCommand extends Command {
 			lastModified: message.author.id
 		});
 
-		return message.util!.send('Tag saved!');
+		return this.reply(message, { content: 'Tag saved!' });
 	}
 }
 

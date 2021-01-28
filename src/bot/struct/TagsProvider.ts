@@ -5,19 +5,19 @@ import Client from './Client';
 export interface Tag {
 	_id?: ObjectId;
 	name: string;
-	aliases: string[];
 	user: string;
-	guild: string;
-	hoisted: boolean;
 	uses: number;
+	guild: string;
 	content: string;
 	createdAt: Date;
 	updatedAt: Date;
+	hoisted: boolean;
+	aliases: string[];
 	lastModified: string;
 }
 
 export default class TagsProvider {
-	protected collection: Collection<Tag>;
+	public collection: Collection<Tag>;
 
 	public constructor(private readonly client: Client) {
 		this.collection = this.client.db.collection(COLLECTION.TAGS);

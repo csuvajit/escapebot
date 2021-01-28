@@ -28,7 +28,7 @@ export default class PrefixCommand extends Command {
 		return new RegExp(`^<@!?(${this.client.user!.id})>$`, 'i');
 	}
 
-	public exec(message: Message, { prefix, match }: { prefix: string | null; match: string }) {
+	public exec(message: Message, { prefix, match }: { prefix?: string; match: string }) {
 		if (/^<@!?(\d+)>$/.test(message.content) && !message.mentions.has(this.client.user!.id)) return;
 
 		if (!prefix) {

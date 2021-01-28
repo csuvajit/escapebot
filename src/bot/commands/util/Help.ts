@@ -17,7 +17,7 @@ export default class HelpCommand extends Command {
 		});
 	}
 
-	public async exec(message: Message, { command }: { command: Command | null }) {
+	public async exec(message: Message, { command }: { command?: Command }) {
 		const prefix = (this.handler.prefix as PrefixSupplier)(message) as string;
 		if (!command) {
 			const embed = new MessageEmbed()
