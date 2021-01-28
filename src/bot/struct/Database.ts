@@ -17,6 +17,7 @@ class MongoDB extends MongoClient {
 		return Promise.all([
 			db.collection(COLLECTION.SETTINGS).createIndex({ guild: 1 }, { unique: true }),
 			db.collection(COLLECTION.TAGS).createIndex({ name: 'text', aliases: 'text' }),
+			db.collection(COLLECTION.ROLE_STATES).createIndex({ guild: 1, user: 1 }, { unique: true }),
 			db.collection(COLLECTION.TAGS).createIndex({ name: 1, aliases: 1 }, { collation: { strength: 2, locale: 'en' } })
 		]);
 	}
