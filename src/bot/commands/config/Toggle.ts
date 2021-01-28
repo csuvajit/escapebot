@@ -54,6 +54,6 @@ export default class ToggleCommand extends Command {
 
 	public exec(message: Message, args: any) {
 		console.log(args);
-		return this.send(message, { content: '**Slash commands refreshed.**' });
+		return this.reply(message, { content: '**Slash commands refreshed.**' });
 	}
 }

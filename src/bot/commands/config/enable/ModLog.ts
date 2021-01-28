@@ -30,6 +30,6 @@ export default class ConfigEnableModLogCommand extends Command {
 
 		this.client.settings.set(message.guild!, SETTINGS.MOD_LOG, channel.id);
 		// eslint-disable-next-line @typescript-eslint/no-base-to-string
-		return this.send(message, { content: `**Moderation channel enabled.** [${channel.toString()}]` });
+		return this.reply(message, { content: `**Moderation channel enabled.** [${channel.toString()}]` });
 	}
 }

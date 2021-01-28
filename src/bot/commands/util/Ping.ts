@@ -36,9 +36,9 @@ export default class PingCommand extends Command {
 	}
 
 	public exec(message: Message | Interaction, { hide }: { hide: boolean }) {
-		return this.send(message, {
+		return this.reply(message, {
 			flags: hide ? 64 : 0,
 			content: `**Gateway Ping~ ${Math.round(this.client.ws.ping).toString()}ms**`
-		});
+		}, hide ? 3 : 4);
 	}
 }
