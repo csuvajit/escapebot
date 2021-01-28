@@ -29,6 +29,7 @@ export default class ToggleRoleStateCommand extends Command {
 			const roles = member.roles.cache.filter(role => role.id !== message.guild!.id && !role.managed)
 				.map(role => role.id);
 
+			if (!roles.length) continue;
 			db.find({ guild: message.guild!.id, user: member.id }).upsert().updateOne({ $set: { roles } });
 		}
 
