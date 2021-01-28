@@ -18,7 +18,7 @@ export default class ToggleRoleStateCommand extends Command {
 			this.client.settings.set(message.guild!, SETTINGS.ROLE_STATE, false);
 
 			await this.client.db.collection(COLLECTION.ROLE_STATES).deleteMany({ guild: message.guild!.id });
-			return this.send(message, { content: '**Successfully removed all the records.**' });
+			return this.reply(message, { content: '**Successfully removed all the records.**' });
 		}
 
 		this.client.settings.set(message.guild!, SETTINGS.ROLE_STATE, true);
@@ -33,6 +33,6 @@ export default class ToggleRoleStateCommand extends Command {
 		}
 
 		await db.execute();
-		return this.send(message, { content: '**Successfully inserted all the records.**' });
+		return this.reply(message, { content: '**Successfully inserted all the records.**' });
 	}
 }
