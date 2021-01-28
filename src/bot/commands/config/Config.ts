@@ -112,8 +112,9 @@ export default class ConfigCommand extends Command {
 			aliases: ['config'],
 			category: 'config',
 			clientPermissions: ['EMBED_LINKS'],
+			userPermissions: ['MANAGE_GUILD'],
 			typing: true,
-			interaction: interaction,
+			interaction,
 			description: {
 				content: [
 					`${interaction.description}`,

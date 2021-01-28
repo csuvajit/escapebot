@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord-api-types/v8';
-import { Command } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { Command, Flag } from 'discord-akairo';
 
 const interaction = {
 	name: 'toggle',
@@ -29,6 +28,7 @@ export default class ToggleCommand extends Command {
 		super('toggle', {
 			aliases: ['toggle'],
 			category: 'config',
+			userPermissions: ['MANAGE_GUILD'],
 			typing: true,
 			interaction,
 			description: {
@@ -42,18 +42,20 @@ export default class ToggleCommand extends Command {
 				].join('\n'),
 				examples: [],
 				usage: '<method>'
-			},
-			args: [
-				{
-					id: 'method',
-					type: ['webhooks', 'rolestates', 'moderation']
-				}
-			]
+			}
 		});
 	}
 
-	public exec(message: Message, args: any) {
-		console.log(args);
-		return this.reply(message, { content: '**Slash commands refreshed.**' });
+	public *args() {
+		const sub = yield {
+			type: [
+				['toggle-rolestate', 'rolestate', 'rolestates'],
+				['toggle-webhooks', 'webhooks', 'webhook'],
+				['toggle-moderation', 'moderation', 'mod']
+			],
+			otherwise: 'toggle_command_failed'
+		};
+
+		return Flag.continue(sub);
 	}
 }
