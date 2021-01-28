@@ -2,7 +2,8 @@ export const COLLECTION = {
 	SETTINGS: 'settings',
 	TAGS: 'tags',
 	CASES: 'cases',
-	REMINDERS: 'reminders'
+	REMINDERS: 'reminders',
+	ROLE_STATES: 'rolestates'
 };
 
 export const SETTINGS = {
