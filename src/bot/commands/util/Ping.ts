@@ -1,9 +1,8 @@
 import { ApplicationCommandOptionType } from 'discord-api-types/v8';
-import Interaction from '../../struct/Interaction';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
-const interaction = {
+export const interaction = {
 	name: 'ping',
 	description: 'Health check',
 	options: [
@@ -21,7 +20,6 @@ export default class PingCommand extends Command {
 			aliases: ['ping'],
 			channel: 'guild',
 			typing: true,
-			interaction,
 			description: {
 				content: 'Pings me!'
 			},
@@ -35,10 +33,7 @@ export default class PingCommand extends Command {
 		});
 	}
 
-	public exec(message: Message | Interaction, { hide }: { hide: boolean }) {
-		return this.reply(message, {
-			flags: hide ? 64 : 0,
-			content: `**Gateway Ping~ ${Math.round(this.client.ws.ping).toString()}ms**`
-		}, hide ? 3 : 4);
+	public exec(message: Message) {
+		return message.util!.send(`**Gateway Ping~ ${Math.round(this.client.ws.ping).toString()}ms**`);
 	}
 }

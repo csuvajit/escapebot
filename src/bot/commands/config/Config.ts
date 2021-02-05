@@ -114,7 +114,6 @@ export default class ConfigCommand extends Command {
 			clientPermissions: ['EMBED_LINKS'],
 			userPermissions: ['MANAGE_GUILD'],
 			typing: true,
-			interaction,
 			description: {
 				content: [
 					`${interaction.description}`,

@@ -12,10 +12,8 @@ export default class TagDeleteCommand extends Command {
 	}
 
 	public *args(msg: Message) {
-		const slash = this.isInteraction(msg);
-
 		const name = yield {
-			match: slash ? 'option' : 'content',
+			match: msg.hasOwnProperty('token') ? 'option' : 'content',
 			type: 'lowercase',
 			flag: '--name'
 		};
@@ -24,9 +22,9 @@ export default class TagDeleteCommand extends Command {
 	}
 
 	public async exec(message: Message, { name }: { name?: string }) {
-		if (!name) return this.reply(message, { content: '**You must provide a tag name idiot!**' });
+		if (!name) return message.util!.send('**You must provide a tag name idiot!**');
 		const del = await this.client.tags.collection.deleteOne({ guild: message.guild!.id, name });
-		if (!del.deletedCount) return this.reply(message, { content: '**No matches found!**' });
-		return this.reply(message, { content: '**Successfully deleted the tag from this guild.**' });
+		if (!del.deletedCount) return message.util!.send('**No matches found!**');
+		return message.util!.send('**Successfully deleted the tag from this guild.**');
 	}
 }

@@ -12,12 +12,10 @@ export default class TagListCommand extends Command {
 		});
 	}
 
-	public *args(message: Message) {
-		const slash = this.isInteraction(message);
-
+	public *args(msg: Message) {
 		const user = yield {
 			'type': 'user',
-			'match': slash ? 'option' : 'phrase',
+			'match': msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			'flag': ['--user'],
 			'default': (message: Message) => message.author
 		};
@@ -32,7 +30,10 @@ export default class TagListCommand extends Command {
 			.setAuthor(message.guild!.name, message.guild!.iconURL()!)
 			.setDescription([
 				'**Pinned Tags**',
-				allTags.filter(tag => !tag.hoisted).map(tag => `\`${tag.name}\``).join(', ')
+				allTags.filter(tag => tag.hoisted)
+					.map(tag => `\`${tag.name}\``)
+					.sort()
+					.join(', ')
 			]);
 
 		const userTags = allTags.filter(tag => !tag.hoisted && tag.user === user?.id);
@@ -41,12 +42,13 @@ export default class TagListCommand extends Command {
 				'\u200b',
 				[
 					`**${user.username}\'s Tags**`,
-					userTags.map(tag => `\`${tag.name}\``).join(', ')
+					userTags.map(tag => `\`${tag.name}\``)
+						.sort()
+						.join(', ')
 				]
 			);
 		}
 
-		return this.reply(message, { embed });
+		return message.util!.send({ embed });
 	}
 }
-

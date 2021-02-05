@@ -1,6 +1,6 @@
+import { COLLECTION, SETTINGS } from '../../../util/Constants';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-import { COLLECTION, SETTINGS } from '../../../util/Constants';
 
 export default class ToggleRoleStateCommand extends Command {
 	public constructor() {
@@ -18,7 +18,7 @@ export default class ToggleRoleStateCommand extends Command {
 			this.client.settings.set(message.guild!, SETTINGS.ROLE_STATE, false);
 
 			await this.client.db.collection(COLLECTION.ROLE_STATES).deleteMany({ guild: message.guild!.id });
-			return this.reply(message, { content: '**Successfully removed all the records.**' });
+			return message.util!.send('**Successfully removed all the records.**');
 		}
 
 		this.client.settings.set(message.guild!, SETTINGS.ROLE_STATE, true);
@@ -34,6 +34,6 @@ export default class ToggleRoleStateCommand extends Command {
 		}
 
 		await db.execute();
-		return this.reply(message, { content: '**Successfully inserted all the records.**' });
+		return message.util!.send('**Successfully inserted all the records.**');
 	}
 }

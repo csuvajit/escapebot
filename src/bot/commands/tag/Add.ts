@@ -12,11 +12,9 @@ export default class TagAddCommand extends Command {
 		});
 	}
 
-	public *args(message: Message) {
-		const slash = this.isInteraction(message);
-
+	public *args(msg: Message) {
 		const name = yield {
-			match: slash ? 'option' : 'phrase',
+			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			type: async (msg: Message, name: string) => {
 				if (!name) return null;
 				const tag = await this.client.tags.find(name, msg.guild!.id);
@@ -31,7 +29,7 @@ export default class TagAddCommand extends Command {
 		};
 
 		const content = yield {
-			match: slash ? 'option' : 'rest',
+			match: msg.hasOwnProperty('token') ? 'option' : 'rest',
 			type: 'string',
 			flag: '--content'
 		};
@@ -39,7 +37,7 @@ export default class TagAddCommand extends Command {
 		const hoisted = yield {
 			type: (msg: Message) => msg.member!.permissions.has('MANAGE_GUILD'),
 			match: 'flag',
-			flag: ['--pin']
+			flag: '--pin'
 		};
 
 		return { name, content, hoisted };
@@ -59,7 +57,7 @@ export default class TagAddCommand extends Command {
 			lastModified: message.author.id
 		});
 
-		return this.reply(message, { content: 'Tag saved!' });
+		return message.util!.send('Tag saved!');
 	}
 }
 

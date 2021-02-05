@@ -92,7 +92,6 @@ export default class TagCommand extends Command {
 			category: 'tag',
 			clientPermissions: ['EMBED_LINKS'],
 			typing: true,
-			interaction,
 			description: {
 				content: [
 					`${interaction.description}`

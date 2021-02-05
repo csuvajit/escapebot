@@ -13,7 +13,8 @@ export const SETTINGS = {
 	RESTRICT_ROLE: 'restrictRole',
 	MODERATION: 'moderation',
 	ROLE_STATE: 'roleState',
-	USER_LOG: 'userLog'
+	USER_LOG: 'userLog',
+	REACTION_ROLE: 'reactionRole'
 };
 
 export const CASES = {

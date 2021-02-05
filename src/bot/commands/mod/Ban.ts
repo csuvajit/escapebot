@@ -18,16 +18,14 @@ export default class PingCommand extends Command {
 	}
 
 	public *args(msg: Message) {
-		const slash = this.isInteraction(msg);
-
 		const user = yield {
-			match: slash ? 'option' : 'phrase',
+			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			type: 'user',
 			flag: '--user'
 		};
 
 		const reason = yield {
-			match: slash ? 'option' : 'rest',
+			match: msg.hasOwnProperty('token') ? 'option' : 'rest',
 			type: 'string',
 			flag: '--reason'
 		};

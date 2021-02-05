@@ -11,12 +11,10 @@ export default class TagSearchCommand extends Command {
 		});
 	}
 
-	public *args(message: Message) {
-		const slash = this.isInteraction(message);
-
+	public *args(msg: Message) {
 		const name = yield {
 			'type': 'string',
-			'match': slash ? 'option' : 'content',
+			'match': msg.hasOwnProperty('token') ? 'option' : 'content',
 			'flag': ['--name'],
 			'default': ''
 		};
@@ -36,7 +34,7 @@ export default class TagSearchCommand extends Command {
 				allTags.map(tag => `\`${tag.name}\``).join(', ')
 			]);
 
-		return this.reply(message, { embed });
+		return message.util!.send({ embed });
 	}
 }
 

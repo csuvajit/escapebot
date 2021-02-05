@@ -13,10 +13,8 @@ export default class TagShowCommand extends Command {
 	}
 
 	public *args(msg: Message) {
-		const slash = this.isInteraction(msg);
-
 		const tag = yield {
-			match: slash ? 'option' : 'content',
+			match: msg.hasOwnProperty('token') ? 'option' : 'content',
 			type: async (msg: Message, name: string) => {
 				name = Util.cleanContent(name.toLowerCase(), msg);
 				const tag = await this.client.tags.find(name, msg.guild!.id);
@@ -29,9 +27,9 @@ export default class TagShowCommand extends Command {
 		return { tag };
 	}
 
-	public async exec(message: Message, { tag }: { tag: Tag | null }) {
+	public async exec(message: Message, { tag }: { tag?: Tag }) {
 		if (!tag) return;
 		await this.client.tags.uses(tag._id!);
-		return this.reply(message, { content: tag.content });
+		return message.util!.send({ content: tag.content });
 	}
 }

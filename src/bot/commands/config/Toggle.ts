@@ -1,7 +1,7 @@
 import { ApplicationCommandOptionType } from 'discord-api-types/v8';
 import { Command, Flag } from 'discord-akairo';
 
-const interaction = {
+export const interaction = {
 	name: 'toggle',
 	description: 'Toggle features on the guild',
 	options: [
@@ -30,7 +30,6 @@ export default class ToggleCommand extends Command {
 			category: 'config',
 			userPermissions: ['MANAGE_GUILD'],
 			typing: true,
-			interaction,
 			description: {
 				content: [
 					`${interaction.description}`,

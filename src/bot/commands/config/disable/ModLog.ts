@@ -14,6 +14,6 @@ export default class ConfigDisableModLogCommand extends Command {
 
 	public exec(message: Message) {
 		this.client.settings.delete(message.guild!, SETTINGS.MOD_LOG);
-		return this.send(message, { content: `**Moderation channel disabled.**` });
+		return message.util!.send(`**Moderation channel disabled.**`);
 	}
 }

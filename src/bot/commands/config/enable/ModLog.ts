@@ -14,11 +14,9 @@ export default class ConfigEnableModLogCommand extends Command {
 	}
 
 	public *args(msg: Message) {
-		const slash = this.isInteraction(msg);
-
 		const channel = yield {
 			type: 'textChannel',
-			match: slash ? 'option' : 'phrase',
+			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			flag: '--channel'
 		};
 
@@ -26,10 +24,10 @@ export default class ConfigEnableModLogCommand extends Command {
 	}
 
 	public exec(message: Message, { channel }: { channel?: TextChannel }) {
-		if (!channel) return this.send(message, { content: '**No matches found!**' });
+		if (!channel) return message.util!.send('**No matches found!**');
 
 		this.client.settings.set(message.guild!, SETTINGS.MOD_LOG, channel.id);
 		// eslint-disable-next-line @typescript-eslint/no-base-to-string
-		return this.reply(message, { content: `**Moderation channel enabled.** [${channel.toString()}]` });
+		return message.util!.send(`**Moderation channel enabled.** [${channel.toString()}]`);
 	}
 }

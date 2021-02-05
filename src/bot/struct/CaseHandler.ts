@@ -1,6 +1,6 @@
-import Client from './Client';
 import { Collection, ObjectId } from 'mongodb';
 import { COLLECTION } from '../util/Constants';
+import Client from './Client';
 
 export interface Case {
 	_id: ObjectId;
