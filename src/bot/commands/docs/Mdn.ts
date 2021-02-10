@@ -5,7 +5,7 @@ import qs from 'querystring';
 
 interface Mdn {
 	query: string;
-	documents: { slug: string; title: string; excerpt: string }[];
+	documents: { slug: string; mdn_url: string; title: string; summary: string }[];
 }
 
 export default class MDNCommand extends Command {
@@ -24,7 +24,7 @@ export default class MDNCommand extends Command {
 						start: 'What would you like to search for?'
 					},
 					match: 'content',
-					type: (msg, query) => query ? query.replace(/#/g, '.prototype.') : null
+					type: (msg, query) => query ? query.toLowerCase().replace(/#/g, '.prototype.') : null
 				}
 			]
 		});
@@ -38,8 +38,8 @@ export default class MDNCommand extends Command {
 			`https://developer.mozilla.org/api/v1/search/en-US?${param}`
 		).then(res => res.json()).catch(() => null);
 
-		let data = body.documents.filter(en => en.slug.startsWith('Web/JavaScript'))
-			.find(en => this.parseQuery(en.title) === this.parseQuery(body.query));
+		let data = body.documents.filter(en => en.slug.toLowerCase().startsWith('web/javascript'))
+			.find(en => this.parseQuery(en.title) === query);
 		if (!data) data = body.documents[0];
 		if (!body.documents.length) return message.util!.send('**No matches found!**');
 
@@ -50,8 +50,8 @@ export default class MDNCommand extends Command {
 				'https://developer.mozilla.org/'
 			)
 			.setTitle(data.title)
-			.setURL(`https://developer.mozilla.org/en-US/docs/${data.slug}`)
-			.setDescription(data.excerpt);
+			.setURL(`https://developer.mozilla.org${data.mdn_url}`)
+			.setDescription(data.summary.replace(/\n/g, ''));
 
 		return message.util!.send({ embed });
 	}
