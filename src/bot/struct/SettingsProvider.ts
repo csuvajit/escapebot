@@ -21,7 +21,7 @@ export default class SettingsProvider {
 			.forEach(data => this.settings.set(data.guild, data.settings));
 	}
 
-	public get<T>(guild: string | Guild, key: string, defaultValue: any): T {
+	public get<T>(guild: string | Guild, key: string, defaultValue?: any): T {
 		const id = (this.constructor as typeof SettingsProvider).guildID(guild);
 		if (this.settings.has(id)) {
 			const value = this.settings.get(id)[key];

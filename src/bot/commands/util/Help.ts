@@ -47,7 +47,7 @@ export default class HelpCommand extends Command {
 
 		const paths = command.filepath.split(/\/|\\/);
 		const path = paths.slice(paths.indexOf('dist') + 1).join('/').replace(/.js/g, '.ts');
-		embed.addField('\u200e', `[View Source](https://github.com/csuvajit/escapebot/blob/main/src/${path})`);
+		embed.addField('\u200e', `[View Source](https://github.com/csuvajit/escapebot/blob/master/src/${path})`);
 
 		return message.util!.send({ embed });
 	}

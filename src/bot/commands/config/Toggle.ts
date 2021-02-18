@@ -1,27 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord-api-types/v8';
 import { Command, Flag } from 'discord-akairo';
-
-export const interaction = {
-	name: 'toggle',
-	description: 'Toggle features on the guild',
-	options: [
-		{
-			name: 'rolestates',
-			type: ApplicationCommandOptionType.SUB_COMMAND,
-			description: 'Enable or disable role states on the guild'
-		},
-		{
-			name: 'moderation',
-			type: ApplicationCommandOptionType.SUB_COMMAND,
-			description: 'Enable or disable moderation on the guild'
-		},
-		{
-			name: 'webhooks',
-			type: ApplicationCommandOptionType.SUB_COMMAND,
-			description: 'Enable or disable webhooks on the guild'
-		}
-	]
-};
 
 export default class ToggleCommand extends Command {
 	public constructor() {
@@ -32,7 +9,7 @@ export default class ToggleCommand extends Command {
 			typing: true,
 			description: {
 				content: [
-					`${interaction.description}`,
+					'Toggle features on the guild',
 					'',
 					'**Method**',
 					'• webhooks',

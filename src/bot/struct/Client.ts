@@ -3,6 +3,7 @@ import { APIApplicationCommandInteractionDataOption } from 'discord-api-types/v8
 import Interaction, { InteractionParser } from './Interaction';
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
+import { Webhook, Intents } from 'discord.js';
 import MuteScheduler from './MuteScheduler';
 import TagsProvider from './TagsProvider';
 import CaseHandler from './CaseHandler';
@@ -20,6 +21,7 @@ declare module 'discord-akairo' {
 		mutes: MuteScheduler;
 		settings: SettingsProvider;
 		reminders: RemindScheduler;
+		webhooks: Map<string, Webhook>;
 		commandHandler: CommandHandler;
 	}
 }
@@ -38,6 +40,8 @@ export default class Client extends AkairoClient {
 	public settings!: SettingsProvider;
 
 	public logger: Logger = new Logger();
+
+	public webhooks = new Map<string, Webhook>();
 
 	public commandHandler: CommandHandler = new CommandHandler(this, {
 		directory: path.join(__dirname, '..', 'commands'),
@@ -61,9 +65,11 @@ export default class Client extends AkairoClient {
 	});
 
 	public constructor() {
-		super({ ownerID: process.env.OWNER! }, {
-			allowedMentions: { repliedUser: false, parse: ['users'] },
-			partials: ['MESSAGE', 'CHANNEL', 'REACTION']
+		super({
+			ownerID: process.env.OWNER!,
+			intents: Intents.ALL,
+			partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
+			allowedMentions: { repliedUser: false, parse: ['users'] }
 		});
 
 		// @ts-expect-error
