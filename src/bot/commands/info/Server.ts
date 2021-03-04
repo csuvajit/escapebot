@@ -37,7 +37,25 @@ export default class ServerInfoCommand extends Command {
 			.addField('Owner', `${message.guild!.owner!.user.tag} (${message.guild!.ownerID})`)
 			.addField('Verification Level', HUMAN_LEVELS[message.guild!.verificationLevel]);
 
-		return message.util!.send({ embed });
+		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
+			return message.util!.send({ embed });
+		}
+
+		const msg = await message.util!.send({ embed });
+		await msg.react('🗑');
+
+		let react;
+		try {
+			react = await msg.awaitReactions(
+				(reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
+				{ max: 1, time: 30000, errors: ['time'] }
+			);
+		} catch (error) {
+			return msg.reactions.removeAll();
+		}
+
+		if (!message.deleted) await message.delete();
+		return react.first()?.message.delete(); // 💩
 	}
 }
 

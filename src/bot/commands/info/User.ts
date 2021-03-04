@@ -29,7 +29,13 @@ export default class UserInfoCommand extends Command {
 			.setDescription(['**ID**', `${user.id}`]);
 		if (member) {
 			embed.addField('Nickname', member.nickname ?? 'None')
-				.addField('Joined', moment.utc(member.joinedAt).format('MMMM D, YYYY, kk:mm:ss'));
+				.addField('Joined', moment.utc(member.joinedAt).format('MMMM D, YYYY, kk:mm:ss'))
+				.addField(
+					'Roles',
+					member.roles.cache.filter(role => role.id !== message.guild!.id)
+						.map(role => role.toString())
+						.join(' ')
+				);
 		}
 		embed.addField('Created', moment.utc(user.createdAt).format('MMMM D, YYYY, kk:mm:ss'))
 			.addField('Status', user.presence.status.toUpperCase());
@@ -45,6 +51,24 @@ export default class UserInfoCommand extends Command {
 		const customStatus = user.presence.activities.find(val => val.type === 'CUSTOM_STATUS');
 		if (customStatus) embed.addField('Custom Status', `${customStatus.emoji?.toString() ?? ''} ${customStatus.state ?? ''}\u200b`);
 
-		return message.util!.send({ embed });
+		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
+			return message.util!.send({ embed });
+		}
+
+		const msg = await message.util!.send({ embed });
+		await msg.react('🗑');
+
+		let react;
+		try {
+			react = await msg.awaitReactions(
+				(reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
+				{ max: 1, time: 30000, errors: ['time'] }
+			);
+		} catch (error) {
+			return msg.reactions.removeAll();
+		}
+
+		if (!message.deleted) await message.delete();
+		return react.first()?.message.delete(); // 💩
 	}
 }
