@@ -12,7 +12,7 @@ export default class GuildMemberAddListener extends Listener {
 	}
 
 	public async exec(member: GuildMember) {
-		const roleState = this.client.settings.get<string>(member.guild, SETTINGS.ROLE_STATE, 0);
+		const roleState = this.client.settings.get<string>(member.guild, SETTINGS.ROLE_STATE);
 		if (roleState) {
 			const roleStore = await this.client.db.collection(COLLECTION.ROLE_STATES)
 				.findOne({ guild: member.guild.id, user: member.id });
@@ -21,7 +21,7 @@ export default class GuildMemberAddListener extends Listener {
 			} catch { }
 		}
 
-		const userLog = this.client.settings.get<string>(member.guild, SETTINGS.USER_LOG, 0);
+		const userLog = this.client.settings.get<string>(member.guild, SETTINGS.USER_LOG);
 		if (userLog && this.client.channels.cache.has(userLog)) {
 			const embed = this.client.util.embed()
 				.setAuthor(`${member.user.tag} (${member.user.id})`, member.user.displayAvatarURL())
@@ -30,7 +30,7 @@ export default class GuildMemberAddListener extends Listener {
 				.setTimestamp();
 
 			const channel = member.guild.channels.cache.get(userLog);
-			if ((channel as TextChannel).permissionsFor(this.client.user!)!.has(['EMBED_LINKS', 'VIEW_CHANNEL', 'SEND_MESSAGES'])) {
+			if ((channel as TextChannel).permissionsFor(this.client.user!)?.has(['EMBED_LINKS', 'VIEW_CHANNEL', 'SEND_MESSAGES'])) {
 				return (channel as TextChannel).send({ embed });
 			}
 		}

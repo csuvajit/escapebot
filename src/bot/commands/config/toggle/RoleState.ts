@@ -13,7 +13,7 @@ export default class ToggleRoleStateCommand extends Command {
 	}
 
 	public async exec(message: Message) {
-		const roleState = this.client.settings.get<string>(message.guild!, SETTINGS.ROLE_STATE, 0);
+		const roleState = this.client.settings.get<string>(message.guild!, SETTINGS.ROLE_STATE, false);
 		if (roleState) {
 			this.client.settings.set(message.guild!, SETTINGS.ROLE_STATE, false);
 
@@ -21,6 +21,7 @@ export default class ToggleRoleStateCommand extends Command {
 			return message.util!.send('**Successfully removed all the records.**');
 		}
 
+		await message.util!.send('*Hold on...*');
 		this.client.settings.set(message.guild!, SETTINGS.ROLE_STATE, true);
 		const members = await message.guild!.members.fetch();
 

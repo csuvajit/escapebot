@@ -12,7 +12,7 @@ export default class GuildMemberRoleStateListener extends Listener {
 	}
 
 	public async exec(oldMember: GuildMember, newMember: GuildMember) {
-		const roleState = this.client.settings.get<string>(newMember.guild, SETTINGS.ROLE_STATE, 0);
+		const roleState = this.client.settings.get<string>(newMember.guild, SETTINGS.ROLE_STATE);
 		if (roleState) {
 			await newMember.guild.members.fetch(newMember.id);
 			if (newMember.roles.cache.size) {

@@ -12,7 +12,7 @@ export default class GuildMemberRemoveListener extends Listener {
 	}
 
 	public async exec(member: GuildMember) {
-		const userLog = this.client.settings.get<string>(member.guild, SETTINGS.USER_LOG, 0);
+		const userLog = this.client.settings.get<string>(member.guild, SETTINGS.USER_LOG);
 		if (userLog && this.client.channels.cache.has(userLog)) {
 			const embed = this.client.util.embed()
 				.setAuthor(`${member.user.tag} (${member.user.id})`, member.user.displayAvatarURL())
@@ -21,7 +21,7 @@ export default class GuildMemberRemoveListener extends Listener {
 				.setTimestamp();
 
 			const channel = member.guild.channels.cache.get(userLog);
-			if ((channel as TextChannel).permissionsFor(this.client.user!)!.has(['EMBED_LINKS', 'VIEW_CHANNEL', 'SEND_MESSAGES'])) {
+			if ((channel as TextChannel).permissionsFor(this.client.user!)?.has(['EMBED_LINKS', 'VIEW_CHANNEL', 'SEND_MESSAGES'])) {
 				return (channel as TextChannel).send({ embed });
 			}
 		}

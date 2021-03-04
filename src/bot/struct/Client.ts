@@ -127,9 +127,9 @@ export default class Client extends AkairoClient {
 
 		this.once('ready', () => this.run());
 
-		await Connection.connect();
+		await Connection.connect().then(() => this.logger.info('Connected to MongoDB', { label: 'DATABASE' }));
 		this.db = Connection.db('escape');
-		await Connection.createIndex(this.db);
+		// await Connection.createIndex(this.db);
 
 		this.settings = new SettingsProvider(this.db);
 		await this.settings.init();
