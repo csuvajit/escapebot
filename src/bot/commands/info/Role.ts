@@ -62,14 +62,15 @@ export default class RoleInfoCommad extends Command {
 		const permission = permissions.map(permission => `\`${PERMISSIONS[permission]}\``).join(', ');
 
 		const embed = this.client.util.embed()
+			.setDescription(role.toString())
 			.setAuthor(`${role.name}`)
 			.addField('ID', `${role.id}`)
 			.addField('Color', `\`${role.hexColor.toUpperCase()}\`, \`${role.color}\``)
 			.addField('Hoisted', `${role.hoist ? 'Yes' : 'No'}`)
 			.addField('Mentionable', `${role.mentionable ? 'Yes' : 'No'}`)
+			.addField('Manageable', role.managed ? 'No' : 'Yes')
 			.addField('Creation Date', `${moment.utc(role.createdAt).format('MMMM D, YYYY, kk:mm:ss')}`)
-			.addField('Permissions', `${permission || 'None'}`)
-			.setThumbnail(message.guild!.iconURL()!);
+			.addField('Permissions', `${permissions.includes('ADMINISTRATOR') ? '\`Administrator\`' : permission || 'None'}`);
 
 		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
 			return message.util!.send({ embed });

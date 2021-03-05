@@ -29,13 +29,15 @@ export default class UserInfoCommand extends Command {
 			.setDescription(['**ID**', `${user.id}`]);
 		if (member) {
 			embed.addField('Nickname', member.nickname ?? 'None')
-				.addField('Joined', moment.utc(member.joinedAt).format('MMMM D, YYYY, kk:mm:ss'))
-				.addField(
+				.addField('Joined', moment.utc(member.joinedAt).format('MMMM D, YYYY, kk:mm:ss'));
+
+			const roles = member.roles.cache.filter(role => role.id !== message.guild!.id);
+			if (roles.size) {
+				embed.addField(
 					'Roles',
-					member.roles.cache.filter(role => role.id !== message.guild!.id)
-						.map(role => role.toString())
-						.join(' ')
+					roles.map(role => role.toString()).join(' ')
 				);
+			}
 		}
 		embed.addField('Created', moment.utc(user.createdAt).format('MMMM D, YYYY, kk:mm:ss'))
 			.addField('Status', user.presence.status.toUpperCase());
