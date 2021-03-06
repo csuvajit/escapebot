@@ -9,12 +9,13 @@ export default class EvalCommand extends Command {
 		super('eval', {
 			aliases: ['eval', 'e'],
 			category: 'owner',
+			ownerOnly: true,
 			description: {},
 			optionFlags: ['--depth', '-d']
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const depth = yield {
 			'match': 'option',
 			'type': Argument.range('integer', 0, 3, true),
