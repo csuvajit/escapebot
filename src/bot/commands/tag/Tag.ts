@@ -17,7 +17,7 @@ export default class TagCommand extends Command {
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const sub = yield {
 			type: [
 				['tag-add', 'add'],

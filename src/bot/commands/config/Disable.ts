@@ -10,7 +10,7 @@ export default class ConfigDisableCommand extends Command {
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const sub = yield {
 			type: [
 				['config-disable-muted', 'muted'],

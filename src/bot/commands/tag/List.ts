@@ -12,7 +12,7 @@ export default class TagListCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const user = yield {
 			'type': 'user',
 			'match': msg.hasOwnProperty('token') ? 'option' : 'phrase',

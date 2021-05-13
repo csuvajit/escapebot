@@ -10,7 +10,7 @@ export default class ReminderCommand extends Command {
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const method = yield {
 			type: [['reminder-add', 'add'], ['reminder-delete', 'delete', 'del', 'cancel'], ['reminder-list', 'list', 'ls']],
 			otherwise: (msg: Message) => this.handler.handleDirectCommand(

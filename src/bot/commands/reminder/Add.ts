@@ -50,7 +50,7 @@ export default class ReminderAddCommand extends Command {
 		await this.client.reminders.create({
 			user: message.author.id,
 			channel: message.channel.id,
-			reason: Util.cleanContent(reason, message),
+			reason: Util.cleanContent(reason, message.channel),
 			reference: message.url,
 			duration: new Date(Date.now() + duration),
 			dm: message.channel.type === 'dm' || dm,

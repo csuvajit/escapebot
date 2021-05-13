@@ -12,11 +12,11 @@ export default class TagShowCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const tag = yield {
 			match: msg.hasOwnProperty('token') ? 'option' : 'content',
 			type: async (msg: Message, name: string) => {
-				name = Util.cleanContent(name.toLowerCase(), msg);
+				name = Util.cleanContent(name.toLowerCase(), msg.channel);
 				const tag = await this.client.tags.find(name, msg.guild!.id);
 				if (!tag) return Flag.cancel();
 				return tag;

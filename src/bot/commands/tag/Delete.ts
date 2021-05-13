@@ -11,7 +11,7 @@ export default class TagDeleteCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const name = yield {
 			match: msg.hasOwnProperty('token') ? 'option' : 'content',
 			type: 'lowercase',

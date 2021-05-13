@@ -26,7 +26,7 @@ export default class EmojiCommand extends Command {
 						if (matched) return message.guild!.emojis.cache.get(matched);
 						const emoji = find(name);
 						if (emoji) return emoji; // eslint-disable-line
-						return message.guild!.emojis.cache.find(e => e.name.toLowerCase() === name);
+						return message.guild!.emojis.cache.find(e => e.name!.toLowerCase() === name);
 					},
 					prompt: {
 						start: 'What emoji would you like information about?',
@@ -44,7 +44,7 @@ export default class EmojiCommand extends Command {
 			const user = await emoji.fetchAuthor().catch(() => null);
 			embed.setThumbnail(emoji.url)
 				.addField('Emoji', emoji.toString())
-				.addField('Name', `${emoji.name}`)
+				.addField('Name', `${emoji.name!}`)
 				.addField('ID', emoji.id)
 				.addField('Raw', `\`<${emoji.animated ? '' : ':'}${emoji.identifier}>\``)
 				.addField('Creator', user!.tag)

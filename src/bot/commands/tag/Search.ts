@@ -11,7 +11,7 @@ export default class TagSearchCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const name = yield {
 			'type': 'string',
 			'match': msg.hasOwnProperty('token') ? 'option' : 'content',

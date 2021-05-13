@@ -17,7 +17,7 @@ export default class PingCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const user = yield {
 			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			type: 'user',

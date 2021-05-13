@@ -29,7 +29,7 @@ export default class ConfigCommand extends Command {
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const sub = yield {
 			type: [
 				['config-refresh', 'refresh'],

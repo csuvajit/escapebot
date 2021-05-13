@@ -12,7 +12,7 @@ export default class TagAddCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const name = yield {
 			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			type: async (msg: Message, name: string) => {
@@ -51,7 +51,7 @@ export default class TagAddCommand extends Command {
 			aliases: [name],
 			user: message.author.id,
 			uses: 0,
-			content: Util.cleanContent(content, message),
+			content: Util.cleanContent(content, message.channel),
 			createdAt: new Date(),
 			updatedAt: new Date(),
 			lastModified: message.author.id

@@ -1,18 +1,5 @@
-import { ApplicationCommandOptionType } from 'discord-api-types/v8';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
-
-export const interaction = {
-	name: 'ping',
-	description: 'Health check',
-	options: [
-		{
-			name: 'hide',
-			description: 'Hides the output',
-			type: ApplicationCommandOptionType.BOOLEAN
-		}
-	]
-};
 
 export default class PingCommand extends Command {
 	public constructor() {

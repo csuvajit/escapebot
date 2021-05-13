@@ -1,5 +1,5 @@
 import { AkairoClient, CommandHandler, ListenerHandler, InhibitorHandler, Command, Flag } from 'discord-akairo';
-import { APIApplicationCommandInteractionDataOption } from 'discord-api-types/v8';
+import { APIApplicationCommandInteractionDataOption, APIInteraction } from 'discord-api-types/v8';
 import Interaction, { InteractionParser } from './Interaction';
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
@@ -66,22 +66,38 @@ export default class Client extends AkairoClient {
 
 	public constructor() {
 		super({
-			ownerID: process.env.OWNER!,
 			intents: Intents.ALL,
+			ownerID: process.env.OWNER!,
 			partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
 			allowedMentions: { repliedUser: false, parse: ['users'] }
 		});
 
-		// @ts-expect-error
-		this.ws.on('INTERACTION_CREATE', async res => {
-			const command = this.commandHandler.findCommand(res.data?.name);
-			if (!command) return; // eslint-disable-line
+		this.ws.on('INTERACTION_CREATE', async (res: APIInteraction) => {
+			const command = this.commandHandler.findCommand(res.data!.name);
+			if (!command || !res.member) return; // eslint-disable-line
 			const interaction = await new Interaction(this, res).parse(res);
+			if (!interaction.channel.permissionsFor(this.user!)!.has(['SEND_MESSAGES', 'VIEW_CHANNEL'])) {
+				const perms = interaction.channel.permissionsFor(this.user!)!.missing(['SEND_MESSAGES', 'VIEW_CHANNEL'])
+					.map(perm => {
+						if (perm === 'VIEW_CHANNEL') return 'Read Messages';
+						return perm.replace(/_/g, ' ').toLowerCase().replace(/\b(\w)/g, char => char.toUpperCase());
+					});
+
+				// @ts-expect-error
+				return this.api.interactions(res.id, res.token).callback.post({
+					data: {
+						type: 4,
+						data: {
+							content: `Missing **${perms.join('** and **')}** permission${perms.length > 1 ? 's' : ''}.`,
+							flags: 64
+						}
+					}
+				});
+			}
+
+			const flags = ['help', 'invite', 'stats', 'guide'].includes(command.id) ? 64 : 0;
 			// @ts-expect-error
-			await this.api.interactions(res.id, res.token).callback.post({ data: { type: 5 } });
-			if (!interaction.channel.permissionsFor(this.user!)!.has(['SEND_MESSAGES', 'VIEW_CHANNEL'])) return;
-			// @ts-expect-error
-			if (await this.commandHandler.runPermissionChecks(interaction, command)) return;
+			await this.api.interactions(res.id, res.token).callback.post({ data: { type: 5, data: { flags } } });
 			return this.handleInteraction(interaction, command, interaction.options);
 		});
 	}
@@ -96,16 +112,19 @@ export default class Client extends AkairoClient {
 		return command.contentParser.parse(content);
 	}
 
-	private async handleInteraction(interaction: Interaction, command: Command, content: string | APIApplicationCommandInteractionDataOption[]): Promise<any> {
+	private async handleInteraction(interaction: Interaction, command: Command, content: string | APIApplicationCommandInteractionDataOption[], ignore = false): Promise<any> {
+		if (!ignore) {
+			// @ts-expect-error
+			if (await this.commandHandler.runPostTypeInhibitors(interaction, command)) return;
+		}
 		const parsed = this.contentParser(command, content);
 		// @ts-expect-error
 		const args = await command.argumentRunner.run(interaction, parsed, command.argumentGenerator);
 		if (Flag.is(args, 'cancel')) {
-			console.log('command_cancelled');
-			return true;
+			return this.commandHandler.emit('commandCancelled', interaction, command);
 		} else if (Flag.is(args, 'continue')) {
 			const continueCommand = this.commandHandler.modules.get(args.command)!;
-			return this.handleInteraction(interaction, continueCommand, args.rest);
+			return this.handleInteraction(interaction, continueCommand, args.rest, args.ignore);
 		}
 
 		// @ts-expect-error

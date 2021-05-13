@@ -10,7 +10,7 @@ export default class ConfigEnableCommand extends Command {
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const sub = yield {
 			type: [
 				['config-enable-muted', 'muted'],

@@ -13,7 +13,7 @@ export default class ConfigEnableModLogCommand extends Command {
 		});
 	}
 
-	public *args(msg: Message) {
+	public *args(msg: Message): unknown {
 		const channel = yield {
 			type: 'textChannel',
 			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',

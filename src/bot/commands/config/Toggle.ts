@@ -22,7 +22,7 @@ export default class ToggleCommand extends Command {
 		});
 	}
 
-	public *args() {
+	public *args(): unknown {
 		const sub = yield {
 			type: [
 				['toggle-rolestate', 'rolestate', 'rolestates'],

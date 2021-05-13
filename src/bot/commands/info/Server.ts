@@ -34,7 +34,7 @@ export default class ServerInfoCommand extends Command {
 			.addField('AFK', message.guild!.afkChannelID ? `<#${message.guild!.afkChannelID}> after ${message.guild!.afkTimeout / 60} min` : 'None')
 			.addField('Region', message.guild!.region.toUpperCase())
 			.addField('Created', moment.utc(message.guild!.createdAt).format('MMMM D, YYYY, kk:mm:ss'))
-			.addField('Owner', `${message.guild!.owner!.user.tag} (${message.guild!.ownerID})`)
+			.addField('Owner', `${(await message.guild!.fetchOwner()).user.tag} (${message.guild!.ownerID})`)
 			.addField('Verification Level', HUMAN_LEVELS[message.guild!.verificationLevel]);
 
 		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
