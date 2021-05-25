@@ -3,3 +3,4 @@ dist/
 .vs/
 .vscode/
 .env
+credentials.json
