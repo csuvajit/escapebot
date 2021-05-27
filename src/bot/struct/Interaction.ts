@@ -135,6 +135,12 @@ export default class Interaction {
 		return this.webhook.send(data).then((msg: any) => this.addMessage(msg));
 	}
 
+	public async reply(content: string) {
+		// @ts-expect-error
+		await this.client.api.interactions(this.id)(this.token).callback
+			.post({ data: { type: 4, data: { content, flags: 64 } } });
+	}
+
 	public async edit(id: string, data: any) {
 		const { files } = await (APIMessage.create(this.webhook, data)).resolveFiles();
 		// @ts-expect-error

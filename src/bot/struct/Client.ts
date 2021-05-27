@@ -4,6 +4,7 @@ import Interaction, { InteractionParser } from './Interaction';
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
 import { Webhook, Intents } from 'discord.js';
+import { SETTINGS } from '../util/Constants';
 import MuteScheduler from './MuteScheduler';
 import TagsProvider from './TagsProvider';
 import CaseHandler from './CaseHandler';
@@ -73,9 +74,12 @@ export default class Client extends AkairoClient {
 		});
 
 		this.ws.on('INTERACTION_CREATE', async (res: APIInteraction) => {
+			const interaction = await new Interaction(this, res).parse(res);
+			if (interaction.type === 3) return this.addRole(interaction);
+
 			const command = this.commandHandler.findCommand(res.data!.name);
 			if (!command || !res.member) return; // eslint-disable-line
-			const interaction = await new Interaction(this, res).parse(res);
+
 			if (!interaction.channel.permissionsFor(this.user!)!.has(['SEND_MESSAGES', 'VIEW_CHANNEL'])) {
 				const perms = interaction.channel.permissionsFor(this.user!)!.missing(['SEND_MESSAGES', 'VIEW_CHANNEL'])
 					.map(perm => {
@@ -100,6 +104,28 @@ export default class Client extends AkairoClient {
 			await this.api.interactions(res.id, res.token).callback.post({ data: { type: 5, data: { flags } } });
 			return this.handleInteraction(interaction, command, interaction.options);
 		});
+	}
+
+	private async addRole(message: Interaction) {
+		// @ts-expect-error
+		if (!['ROLE_ADD', 'ROLE_REMOVE'].includes(message.data.custom_id)) return;
+		const roleID = this.settings.get<string>(message.guild, SETTINGS.REACTION_ROLE, '807254345526804522');
+		if (!message.guild.roles.cache.has(roleID)) return;
+
+		// @ts-expect-error
+		if (message.data.custom_id === 'ROLE_ADD') {
+			if (!message.member.roles.cache.has(roleID)) {
+				await message.member.roles.add(roleID).catch(() => null);
+			}
+
+			return message.reply(`**You have got <@&${roleID}> role!**`);
+		}
+
+		if (message.member.roles.cache.has(roleID)) {
+			await message.member.roles.remove(roleID).catch(() => null);
+		}
+
+		return message.reply(`**You have got <@&${roleID}> role removed!**`);
 	}
 
 	private contentParser(command: Command, content: string | APIApplicationCommandInteractionDataOption[]) {
