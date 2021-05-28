@@ -75,7 +75,7 @@ export default class Client extends AkairoClient {
 
 		this.ws.on('INTERACTION_CREATE', async (res: APIInteraction) => {
 			const interaction = await new Interaction(this, res).parse(res);
-			if (interaction.type === 3) return this.addRole(interaction);
+			if (interaction.type === 3) return this.handleComponent(interaction, res);
 
 			const command = this.commandHandler.findCommand(res.data!.name);
 			if (!command || !res.member) return; // eslint-disable-line
@@ -104,6 +104,24 @@ export default class Client extends AkairoClient {
 			await this.api.interactions(res.id, res.token).callback.post({ data: { type: 5, data: { flags } } });
 			return this.handleInteraction(interaction, command, interaction.options);
 		});
+	}
+
+	private async handleComponent(interaction: Interaction, res: APIInteraction) {
+		// @ts-expect-error
+		if (['ROLE_ADD', 'ROLE_REMOVE'].includes(res.data.custom_id)) return this.addRole(interaction);
+		// @ts-expect-error
+		if (['ACCEPT_INTENT', 'REJECT_INTENT'].includes(res.data.custom_id)) return this.handleIntents(res);
+	}
+
+	private handleIntents(res: APIInteraction) {
+		// @ts-expect-error
+		if (res.data.custom_id === 'ACCEPT_INTENT') {
+			// @ts-expect-error
+			return this.api.channels[res.channel_id].messages[res.message.id].patch({ data: { components: [] } });
+		}
+
+		// @ts-expect-error
+		return this.api.channels[res.channel_id].messages[res.message.id].delete();
 	}
 
 	private async addRole(message: Interaction) {

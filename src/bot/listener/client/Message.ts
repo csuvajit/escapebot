@@ -56,10 +56,27 @@ export default class MessageListener extends Listener {
 			{ label: 'AI' }
 		);
 
-		if (result.intentDetectionConfidence !== 1) return;
-		return webhook.send(`${result.fulfillmentText!}`, {
-			username: this.client.user!.username,
-			avatarURL: this.client.user!.displayAvatarURL({ format: 'png' })
-		});
+		if (!(result.intentDetectionConfidence! >= 0.8)) return;
+		// @ts-expect-error
+		return this.client.api.channels[message.channel.id].messages.post(
+			{
+				data: {
+					content: [
+						result.fulfillmentText,
+						'',
+						'Was it helpful?'
+					].join('\n'),
+					components: [
+						{
+							type: 1,
+							components: [
+								{ type: 2, style: 1, label: 'Yes', custom_id: 'ACCEPT_INTENT' },
+								{ type: 2, style: 4, label: 'No', custom_id: 'REJECT_INTENT' }
+							]
+						}
+					]
+				}
+			}
+		);
 	}
 }
