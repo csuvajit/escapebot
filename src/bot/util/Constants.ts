@@ -3,7 +3,9 @@ export const COLLECTION = {
 	TAGS: 'tags',
 	CASES: 'cases',
 	REMINDERS: 'reminders',
-	ROLE_STATES: 'rolestates'
+	ROLE_STATES: 'rolestates',
+	DIALOGFLOWS: 'dialogflows',
+	INTENTS: 'intents'
 };
 
 export const SETTINGS = {

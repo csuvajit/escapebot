@@ -12,6 +12,7 @@ import { Connection } from './Database';
 import Logger from '../util/Logger';
 import { Db } from 'mongodb';
 import path from 'path';
+import Dialogflow from './Dialogflow';
 
 declare module 'discord-akairo' {
 	interface AkairoClient {
@@ -20,6 +21,7 @@ declare module 'discord-akairo' {
 		tags: TagsProvider;
 		cases: CaseHandler;
 		mutes: MuteScheduler;
+		dialogflow: Dialogflow;
 		settings: SettingsProvider;
 		reminders: RemindScheduler;
 		webhooks: Map<string, Webhook>;
@@ -35,6 +37,8 @@ export default class Client extends AkairoClient {
 	public cases!: CaseHandler;
 
 	public mutes!: MuteScheduler;
+
+	public dialogflow!: Dialogflow;
 
 	public reminders!: RemindScheduler;
 
@@ -110,18 +114,40 @@ export default class Client extends AkairoClient {
 		// @ts-expect-error
 		if (['ROLE_ADD', 'ROLE_REMOVE'].includes(res.data.custom_id)) return this.addRole(interaction);
 		// @ts-expect-error
-		if (['ACCEPT_INTENT', 'REJECT_INTENT'].includes(res.data.custom_id)) return this.handleIntents(res);
+		if (['ACCEPT_INTENT', 'REJECT_INTENT'].includes(res.data.custom_id)) return this.handleIntents(res, interaction);
 	}
 
-	private handleIntents(res: APIInteraction) {
+	private async handleIntents(res: APIInteraction, interaction: Interaction) {
 		// @ts-expect-error
-		if (res.data.custom_id === 'ACCEPT_INTENT') {
-			// @ts-expect-error
-			return this.api.channels[res.channel_id].messages[res.message.id].patch({ data: { components: [] } });
-		}
+		await this.api.interactions(res.id, res.token).callback.post({
+			data: {
+				type: 7,
+				data: {
+					// @ts-expect-error
+					components: res.message.components
+				}
+			}
+		});
 
 		// @ts-expect-error
-		return this.api.channels[res.channel_id].messages[res.message.id].delete();
+		const accpeted = res.data.custom_id === 'ACCEPT_INTENT';
+		const admin = interaction.member.permissions.has('MANAGE_GUILD');
+		if (accpeted && admin) {
+			// @ts-expect-error
+			await this.api.channels[res.channel_id].messages[res.message.id].patch({
+				data: {
+					components: [],
+					// @ts-expect-error
+					content: res.message.content.replace(/\u200e(.*)\u200e/gi, ''),
+					allowed_mentions: { replied_user: false }
+				}
+			});
+		} else if (admin) {
+			// @ts-expect-error
+			await this.api.channels[res.channel_id].messages[res.message.id].delete();
+		}
+
+		return this.dialogflow.create(res, accpeted, admin);
 	}
 
 	private async addRole(message: Interaction) {
@@ -192,7 +218,7 @@ export default class Client extends AkairoClient {
 
 		await Connection.connect().then(() => this.logger.info('Connected to MongoDB', { label: 'DATABASE' }));
 		this.db = Connection.db('escape');
-		// await Connection.createIndex(this.db);
+		await Connection.createIndex(this.db);
 
 		this.settings = new SettingsProvider(this.db);
 		await this.settings.init();
@@ -200,6 +226,7 @@ export default class Client extends AkairoClient {
 		this.tags = new TagsProvider(this);
 		this.cases = new CaseHandler(this);
 		this.mutes = new MuteScheduler(this);
+		this.dialogflow = new Dialogflow(this);
 		this.reminders = new RemindScheduler(this);
 	}
 

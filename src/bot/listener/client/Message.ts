@@ -1,4 +1,4 @@
-import { Message, Webhook } from 'discord.js';
+import { Message } from 'discord.js';
 import { Listener } from 'discord-akairo';
 // eslint-disable-next-line
 const credentials = require('../../../../credentials.json');
@@ -6,8 +6,6 @@ import { SessionsClient } from '@google-cloud/dialogflow';
 import * as uuid from 'uuid';
 
 export default class MessageListener extends Listener {
-	private webhook!: Webhook | null;
-
 	public constructor() {
 		super('message', {
 			emitter: 'client',
@@ -16,19 +14,10 @@ export default class MessageListener extends Listener {
 		});
 	}
 
-	private async getWebhook() {
-		if (this.webhook) return this.webhook;
-		this.webhook = await this.client.fetchWebhook('846776379973435454').catch(() => null);
-		return this.webhook;
-	}
-
 	public async exec(message: Message) {
-		if (message.channel.id !== '736861685704425503') return;
+		if (!['736861685704425503', '847905466322780230'].includes(message.channel.id)) return;
 		if (message.author.bot) return;
 		if (!message.content) return;
-
-		const webhook = await this.getWebhook();
-		if (!webhook) return;
 
 		const sessionId = uuid.v4();
 		const sessionClient = new SessionsClient({ credentials });
@@ -57,6 +46,13 @@ export default class MessageListener extends Listener {
 		);
 
 		if (!(result.intentDetectionConfidence! >= 0.8)) return;
+
+		this.client.dialogflow.responses.set(message.id, {
+			query: result.queryText!,
+			intent: result.intent.displayName!,
+			confidence: result.intentDetectionConfidence!
+		});
+
 		// @ts-expect-error
 		return this.client.api.channels[message.channel.id].messages.post(
 			{
@@ -64,7 +60,7 @@ export default class MessageListener extends Listener {
 					content: [
 						result.fulfillmentText,
 						'',
-						'Was it helpful?'
+						'\u200eWas it helpful?\u200e'
 					].join('\n'),
 					components: [
 						{
@@ -74,7 +70,15 @@ export default class MessageListener extends Listener {
 								{ type: 2, style: 4, label: 'No', custom_id: 'REJECT_INTENT' }
 							]
 						}
-					]
+					],
+					message_reference: {
+						message_id: message.id,
+						guild_id: message.guild!.id,
+						fail_if_not_exists: false
+					},
+					allowed_mentions: {
+						replied_user: false
+					}
 				}
 			}
 		);
