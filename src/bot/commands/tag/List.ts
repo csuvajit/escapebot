@@ -34,7 +34,7 @@ export default class TagListCommand extends Command {
 					.map(tag => `\`${tag.name}\``)
 					.sort()
 					.join(', ')
-			]);
+			].join('\n'));
 
 		const userTags = allTags.filter(tag => !tag.hoisted && tag.user === user?.id);
 		if (userTags.length && user) {
@@ -45,7 +45,7 @@ export default class TagListCommand extends Command {
 					userTags.map(tag => `\`${tag.name}\``)
 						.sort()
 						.join(', ')
-				]
+				].join('\n')
 			);
 		}
 

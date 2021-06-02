@@ -1,5 +1,5 @@
 import { Command, Argument } from 'discord-akairo';
-import { Message, User } from 'discord.js';
+import { Message, User, Snowflake } from 'discord.js';
 import moment from 'moment';
 
 const DEVICES: { [key: string]: string } = { desktop: '🖥️', mobile: '📱', web: '🌐' };
@@ -14,7 +14,7 @@ export default class UserInfoCommand extends Command {
 			args: [
 				{
 					'id': 'user',
-					'type': Argument.union('user', (_, id: string) => id ? this.client.users.fetch(id).catch(() => null) : null),
+					'type': Argument.union('user', (_, id: string) => id ? this.client.users.fetch(id as Snowflake).catch(() => null) : null),
 					'default': (message: Message) => message.author
 				}
 			]
@@ -26,7 +26,7 @@ export default class UserInfoCommand extends Command {
 		const embed = this.client.util.embed()
 			.setAuthor(user.tag, user.displayAvatarURL({ dynamic: true }))
 			.setThumbnail(user.displayAvatarURL({ dynamic: true }))
-			.setDescription(['**ID**', `${user.id}`]);
+			.setDescription(['**ID**', `${user.id}`].join('\n'));
 		if (member) {
 			embed.addField('Nickname', member.nickname ?? 'None')
 				.addField('Joined', moment.utc(member.joinedAt).format('MMMM D, YYYY, kk:mm:ss'));

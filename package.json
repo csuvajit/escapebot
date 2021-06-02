@@ -18,7 +18,7 @@
 		"chalk": "^4.1.0",
 		"diff": "^5.0.0",
 		"discord-akairo": "^8.1.0",
-		"discord.js": "github:discordjs/discord.js",
+		"discord.js": "github:monbrey/discord.js#message-components",
 		"dotenv": "^8.2.0",
 		"moment": "^2.29.1",
 		"moment-duration-format": "^2.3.2",

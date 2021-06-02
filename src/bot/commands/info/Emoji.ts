@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { utc } from 'moment';
-import { MessageEmbed, GuildEmoji, Message } from 'discord.js';
+import { MessageEmbed, GuildEmoji, Message, Snowflake } from 'discord.js';
 import { find, Emoji } from 'node-emoji';
 
 const EMOJI_REGEX = /<(?:a)?:(?:\w{2,32}):(\d{17,19})>?/;
@@ -23,7 +23,7 @@ export default class EmojiCommand extends Command {
 					match: 'content',
 					type: (message, name) => {
 						const matched = EMOJI_REGEX.exec(name)?.[1];
-						if (matched) return message.guild!.emojis.cache.get(matched);
+						if (matched) return message.guild!.emojis.cache.get(matched as Snowflake);
 						const emoji = find(name);
 						if (emoji) return emoji; // eslint-disable-line
 						return message.guild!.emojis.cache.find(e => e.name!.toLowerCase() === name);

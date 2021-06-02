@@ -1,4 +1,4 @@
-import { MessageReaction, User, Guild } from 'discord.js';
+import { MessageReaction, User, Guild, Snowflake } from 'discord.js';
 import { SETTINGS } from '../../util/Constants';
 import { Listener } from 'discord-akairo';
 
@@ -17,7 +17,7 @@ export default class MessageReactionRemoveListener extends Listener {
 		if (!reaction.message.guild) return;
 
 		if (reaction.emoji.name === '📢') {
-			const roleID = this.client.settings.get<string>(reaction.message.guild, SETTINGS.REACTION_ROLE, '807254345526804522');
+			const roleID = this.client.settings.get<Snowflake>(reaction.message.guild, SETTINGS.REACTION_ROLE, '807254345526804522');
 			if (!reaction.message.guild.roles.cache.has(roleID)) return;
 
 			const member = await this.getMember(reaction.message.guild, user.id);
@@ -27,7 +27,7 @@ export default class MessageReactionRemoveListener extends Listener {
 		}
 	}
 
-	private getMember(guild: Guild, id: string) {
+	private getMember(guild: Guild, id: Snowflake) {
 		if (guild.members.cache.has(id)) {
 			return guild.members.cache.get(id);
 		}

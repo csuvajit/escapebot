@@ -3,7 +3,7 @@ import { APIApplicationCommandInteractionDataOption, APIInteraction } from 'disc
 import Interaction, { InteractionParser } from './Interaction';
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
-import { Webhook, Intents } from 'discord.js';
+import { Webhook, Intents, Snowflake } from 'discord.js';
 import { SETTINGS } from '../util/Constants';
 import MuteScheduler from './MuteScheduler';
 import TagsProvider from './TagsProvider';
@@ -72,7 +72,7 @@ export default class Client extends AkairoClient {
 	public constructor() {
 		super({
 			intents: Intents.ALL,
-			ownerID: process.env.OWNER!,
+			ownerID: process.env.OWNER as Snowflake,
 			partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
 			allowedMentions: { repliedUser: false, parse: ['users'] }
 		});
@@ -153,7 +153,7 @@ export default class Client extends AkairoClient {
 	private async addRole(message: Interaction) {
 		// @ts-expect-error
 		if (!['ROLE_ADD', 'ROLE_REMOVE'].includes(message.data.custom_id)) return;
-		const roleID = this.settings.get<string>(message.guild, SETTINGS.REACTION_ROLE, '807254345526804522');
+		const roleID = this.settings.get<Snowflake>(message.guild, SETTINGS.REACTION_ROLE, '807254345526804522');
 		if (!message.guild.roles.cache.has(roleID)) return;
 
 		// @ts-expect-error

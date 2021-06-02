@@ -71,9 +71,7 @@ export default class ErrorListener extends Listener {
 		captureException(error);
 
 		if (message.guild ? (message.channel as TextChannel).permissionsFor(this.client.user!)?.has('SEND_MESSAGES') : true) {
-			return message.channel.send([
-				`*Error while executing!*\n\`\`\`\n${error as string}\`\`\``
-			]);
+			return message.channel.send(`*Error while executing!*\n\`\`\`\n${error as string}\`\`\``);
 		}
 	}
 }

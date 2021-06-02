@@ -1,4 +1,5 @@
 import { Listener } from 'discord-akairo';
+import { Snowflake } from 'discord.js';
 import { SETTINGS } from '../../util/Constants';
 
 export default class ReadyListener extends Listener {
@@ -14,7 +15,7 @@ export default class ReadyListener extends Listener {
 		this.client.logger.info(`Ready ${this.client.user!.tag}`, { label: 'READY' });
 
 		for (const guild of this.client.guilds.cache.values()) {
-			const webhookId = this.client.settings.get<string>(guild, SETTINGS.WEBHOOK_LOG);
+			const webhookId = this.client.settings.get<Snowflake | null>(guild, SETTINGS.WEBHOOK_LOG);
 			if (!webhookId) continue;
 			const webhook = (await guild.fetchWebhooks()).get(webhookId);
 			if (!webhook) continue;

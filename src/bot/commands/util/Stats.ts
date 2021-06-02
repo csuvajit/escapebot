@@ -1,5 +1,5 @@
 import { Command } from 'discord-akairo';
-import { Message } from 'discord.js';
+import { Message, Snowflake } from 'discord.js';
 import 'moment-duration-format';
 import moment from 'moment';
 import os from 'os';
@@ -18,7 +18,7 @@ export default class StatsCommand extends Command {
 	}
 
 	public async exec(message: Message) {
-		const user = await this.client.users.fetch(this.client.ownerID as string);
+		const user = await this.client.users.fetch(this.client.ownerID as Snowflake);
 		const embed = this.client.util.embed()
 			.setAuthor(this.client.user!.tag, this.client.user!.displayAvatarURL())
 			.setThumbnail(this.client.user!.displayAvatarURL())
@@ -41,7 +41,7 @@ export default class StatsCommand extends Command {
 				'',
 				'**Source Code**',
 				`[View on GitHub](https://github.com/csuvajit/escapebot)`
-			])
+			].join('\n'))
 			.setFooter(`© ${new Date().getFullYear()} ${user.tag}`, user.displayAvatarURL({ dynamic: true }));
 
 		return message.util!.send({ embed });

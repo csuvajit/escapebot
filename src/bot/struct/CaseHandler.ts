@@ -1,19 +1,22 @@
+import { Snowflake } from 'discord.js';
 import { Collection, ObjectId } from 'mongodb';
 import { COLLECTION } from '../util/Constants';
 import Client from './Client';
 
+export const num = 123456789123456789;
+
 export interface Case {
 	_id: ObjectId;
-	guild: string;
+	guild: Snowflake;
 	action: number;
 	reason?: string;
 	case_id: number;
 	closed: boolean;
 	duration?: Date;
 	processed: boolean;
-	user_id: string;
+	user_id: Snowflake;
 	user_tag: string;
-	author_id: string;
+	author_id: Snowflake;
 	author_tag: string;
 	message: string;
 	reference?: string;

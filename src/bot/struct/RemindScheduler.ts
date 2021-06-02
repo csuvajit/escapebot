@@ -1,13 +1,13 @@
 import { Collection, ObjectId } from 'mongodb';
 import { COLLECTION } from '../util/Constants';
-import { TextChannel } from 'discord.js';
+import { Snowflake, TextChannel } from 'discord.js';
 import Client from './Client';
 
 export interface Reminder {
 	_id: ObjectId;
-	user: string;
+	user: Snowflake;
 	dm: boolean;
-	channel: string;
+	channel: Snowflake;
 	reference: string;
 	reason: string;
 	duration: Date;
@@ -74,10 +74,10 @@ export default class RemindScheduler {
 
 			const channel = !reminder.dm && (this.client.channels.cache.get(reminder.channel) as TextChannel);
 			if (channel) {
-				await channel.send(content);
+				await channel.send(content.join('\n'));
 			} else {
 				const user = await this.client.users.fetch(reminder.user).catch(() => null);
-				if (user) await user.send(content);
+				if (user) await user.send(content.join('\n'));
 			}
 		} catch (error) {
 			this.client.logger.error('Reminder Failed', { label: 'REMINDER' });

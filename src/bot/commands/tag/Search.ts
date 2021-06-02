@@ -32,7 +32,7 @@ export default class TagSearchCommand extends Command {
 			.setDescription([
 				'**Search Result**',
 				allTags.map(tag => `\`${tag.name}\``).join(', ')
-			]);
+			].join('\n'));
 
 		return message.util!.send({ embed });
 	}

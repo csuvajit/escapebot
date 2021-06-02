@@ -37,7 +37,7 @@ export default class Logger {
 		const timestamp = chalk.cyan(moment().utcOffset('+05:30').format('DD-MM-YYYY kk:mm:ss'));
 		const content = this.clean(message);
 		const stream = error ? process.stderr : process.stdout;
-		return stream.write(`[${timestamp}] [SHARD 0] ${chalk[COLORS[tag]].bold(TAGS[tag])} » ${label ? `[${label}] » ` : ''}${content}\n`);
+		stream.write(`[${timestamp}] [SHARD 0] ${chalk[COLORS[tag]].bold(TAGS[tag])} » ${label ? `[${label}] » ` : ''}${content}\n`);
 	}
 
 	private static clean(message: string | any) {
