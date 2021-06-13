@@ -58,5 +58,5 @@ jobs:
                mv s/node_modules ~/escapebot
                cd ~/escapebot
                pm2 delete escape
-               pm2 start dist/index.js --name escape
+               pm2 start dist/src/index.js --name escape
               displayName: 'Run Application'

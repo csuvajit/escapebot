@@ -2,19 +2,20 @@
 	"name": "escape",
 	"version": "1.0.1",
 	"description": "Discord Moderation and Utility Bot",
-	"main": "dist/index.js",
+	"main": "dist/src/index.js",
 	"author": "SUVAJIT <suvajit.me@gmail.com>",
 	"license": "MIT",
 	"private": "true",
 	"scripts": {
 		"build": "tsc",
-		"start": "node --enable-source-maps dist/index.js",
+		"start": "node --enable-source-maps dist/src/index.js",
 		"test": "eslint --ext .ts --ignore-path .gitignore .",
 		"lint": "eslint --fix --ext .ts --ignore-path .gitignore ."
 	},
 	"dependencies": {
 		"@google-cloud/dialogflow": "^3.5.0",
-		"@sentry/node": "^5.30.0",
+		"@sentry/integrations": "^6.6.0",
+		"@sentry/node": "^6.6.0",
 		"chalk": "^4.1.0",
 		"diff": "^5.0.0",
 		"discord-akairo": "github:csuvajit/discord-akairo#main",

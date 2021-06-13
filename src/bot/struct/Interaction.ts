@@ -2,8 +2,7 @@
 import {
 	InteractionType,
 	APIGuildInteraction,
-	APIApplicationCommandInteractionData,
-	APIApplicationCommandInteractionDataOption
+	APIApplicationCommandInteractionData
 } from 'discord-api-types/v8';
 import {
 	TextChannel,
@@ -175,13 +174,7 @@ export class InteractionParser {
 		this.optionFlagWords = optionFlagWords;
 	}
 
-	private parseOptions(
-		options: any[],
-		all: any[] = [],
-		phrases: any[] = [],
-		flags: any[] = [],
-		optionFlags: any[] = []
-	): any[] {
+	private parseOptions(options: any[], all: any[] = [], phrases: any[] = [], flags: any[] = [], optionFlags: any[] = []): any[] {
 		if (!options.length) return [all, phrases, flags, optionFlags];
 
 		const top = options.shift();
@@ -224,7 +217,7 @@ export class InteractionParser {
 		return this.parseOptions(options, all, phrases, flags, optionFlags);
 	}
 
-	public parse(args: APIApplicationCommandInteractionDataOption[]) {
+	public parse(args: any[]) {
 		const [all, phrases, flags, optionFlags] = this.parseOptions(args);
 		return { all, phrases, flags, optionFlags };
 	}

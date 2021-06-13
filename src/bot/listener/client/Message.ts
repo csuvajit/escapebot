@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Listener } from 'discord-akairo';
-// eslint-disable-next-line
-const credentials = require('../../../../credentials.json');
+// @ts-ignore
+import credentials from '../../../../credentials.json';
 import { SessionsClient } from '@google-cloud/dialogflow';
 import * as uuid from 'uuid';
 
