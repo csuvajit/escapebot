@@ -54,10 +54,10 @@ export default class UserInfoCommand extends Command {
 		if (customStatus) embed.addField('Custom Status', `${customStatus.emoji?.toString() ?? ''} ${customStatus.state ?? ''}\u200b`);
 
 		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
-			return message.util!.send({ embed });
+			return message.util!.send({ embeds: [embed] });
 		}
 
-		const msg = await message.util!.send({ embed });
+		const msg = await message.util!.send({ embeds: [embed] });
 		await msg.react('🗑');
 
 		let react;

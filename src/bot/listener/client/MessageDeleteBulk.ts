@@ -32,11 +32,12 @@ export default class MessageDeleteBulkListener extends Listener {
 				.addField('Logs', 'See attachment file for full logs.')
 				.setTimestamp(new Date());
 
-			return webhook.send(`${(messages.first()!.channel as Channel).toString()} (Bulk Message Delete)`, {
+			return webhook.send({
 				embeds: [embed],
-				files: [{ attachment: Buffer.from(output, 'utf8'), name: 'logs.txt' }],
 				username: this.client.user!.username,
-				avatarURL: this.client.user!.displayAvatarURL()
+				avatarURL: this.client.user!.displayAvatarURL(),
+				files: [{ attachment: Buffer.from(output, 'utf8'), name: 'logs.txt' }],
+				content: `${(messages.first()!.channel as Channel).toString()} (Bulk Message Delete)`
 			});
 		}
 	}

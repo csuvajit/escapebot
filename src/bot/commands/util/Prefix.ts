@@ -41,7 +41,7 @@ export default class PrefixCommand extends Command {
 			return message.util!.send([
 				`The current prefix for this server is \`${(this.handler.prefix as PrefixSupplier)(message) as string}\``,
 				'You are missing `Manage Server` to change the prefix.'
-			]);
+			].join('\n'));
 		}
 
 		this.client.settings.set(message.guild!, 'prefix', prefix);

@@ -32,16 +32,16 @@ export default class ServerInfoCommand extends Command {
 			.addField('Text Channels', `${message.guild!.channels.cache.filter(ch => ch.type === 'text').size}`)
 			.addField('Voice Channels', `${message.guild!.channels.cache.filter(ch => ch.type === 'voice').size}`)
 			.addField('AFK', message.guild!.afkChannelID ? `<#${message.guild!.afkChannelID}> after ${message.guild!.afkTimeout / 60} min` : 'None')
-			.addField('Region', message.guild!.region.toUpperCase())
+			// .addField('Region', message.guild!.region.toUpperCase())
 			.addField('Created', moment.utc(message.guild!.createdAt).format('MMMM D, YYYY, kk:mm:ss'))
 			.addField('Owner', `${(await message.guild!.fetchOwner()).user.tag} (${message.guild!.ownerID})`)
 			.addField('Verification Level', HUMAN_LEVELS[message.guild!.verificationLevel]);
 
 		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
-			return message.util!.send({ embed });
+			return message.util!.send({ embeds: [embed] });
 		}
 
-		const msg = await message.util!.send({ embed });
+		const msg = await message.util!.send({ embeds: [embed] });
 		await msg.react('🗑');
 
 		let react;

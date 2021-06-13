@@ -26,10 +26,11 @@ export default class MessageDeleteListener extends Listener {
 				.setTimestamp(new Date());
 			if (attachment) embed.addField('Attachment', attachment.url);
 
-			return webhook.send(`${(message.channel as Channel).toString()} (Message Delete)`, {
+			return webhook.send({
 				embeds: [embed],
 				username: this.client.user!.username,
-				avatarURL: this.client.user!.displayAvatarURL()
+				avatarURL: this.client.user!.displayAvatarURL(),
+				content: `${(message.channel as Channel).toString()} (Message Delete)`
 			});
 		}
 	}

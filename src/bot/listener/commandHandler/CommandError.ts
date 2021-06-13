@@ -14,6 +14,7 @@ export default class ErrorListener extends Listener {
 	public exec(error: any, message: Message, command?: Command) {
 		const label = message.guild ? `${message.guild.name}/${message.author.tag}` : `${message.author.tag}`;
 		this.client.logger.error(`${command!.id} ~ ${error as string}`, { label });
+		this.client.logger.error(error, { label: 'uwu' });
 
 		addBreadcrumb({
 			message: 'command_errored',

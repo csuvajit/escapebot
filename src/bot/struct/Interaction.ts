@@ -1,6 +1,24 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-import { APIInteraction, InteractionType, APIApplicationCommandInteractionData, APIApplicationCommandInteractionDataOption } from 'discord-api-types/v8';
-import { TextChannel, User, Guild, GuildMember, APIMessage, Collection, MessageOptions, MessageAdditions, Message, WebhookClient, SnowflakeUtil, Snowflake } from 'discord.js';
+/* eslint-disable */
+import {
+	InteractionType,
+	APIGuildInteraction,
+	APIApplicationCommandInteractionData,
+	APIApplicationCommandInteractionDataOption
+} from 'discord-api-types/v8';
+import {
+	TextChannel,
+	User,
+	Guild,
+	GuildMember,
+	APIMessage,
+	Collection,
+	MessageOptions,
+	Message,
+	WebhookClient,
+	SnowflakeUtil,
+	Snowflake
+} from 'discord.js';
+
 import Client from './Client';
 
 export class CommandUtil {
@@ -34,8 +52,8 @@ export class CommandUtil {
 		// TODO
 	}
 
-	public async send(content: string, options?: MessageOptions | MessageAdditions): Promise<Message | Message[]> {
-		const transformedOptions = (this.constructor as typeof CommandUtil).transformOptions(content, options);
+	public async send(options: MessageOptions): Promise<Message | Message[]> {
+		const transformedOptions = (this.constructor as typeof CommandUtil).transformOptions(options);
 		if (!this.lastResponse?.deleted && this.shouldEdit) {
 			return this.message.edit(this.lastResponse!.id, transformedOptions);
 		}
@@ -45,17 +63,10 @@ export class CommandUtil {
 		return sent;
 	}
 
-	public static transformOptions(content: any, options?: any) {
-		if (content?.hasOwnProperty('embed')) {
-			content.embeds = [content.embed];
-		} else if (options?.hasOwnProperty('embed')) {
-			options.embeds = [options.embed];
-		}
-
-		const transformedOptions: any = APIMessage.transformOptions(content, options, {}, true);
-		if (!transformedOptions.content) transformedOptions.content = '\u200b';
-		if (!transformedOptions.embeds?.length) transformedOptions.embeds = [];
-		return transformedOptions;
+	public static transformOptions(options: MessageOptions) {
+		if (!options.embeds?.length) options.embeds = [];
+		if (!options.content) options.content = undefined;
+		return options;
 	}
 }
 
@@ -73,7 +84,7 @@ export default class Interaction {
 	public commandUtils = new Collection();
 	public data?: APIApplicationCommandInteractionData;
 
-	public constructor(client: Client, data: APIInteraction) {
+	public constructor(client: Client, data: APIGuildInteraction) {
 		this.id = data.id;
 		this.data = data.data;
 		this.type = data.type;
@@ -110,7 +121,7 @@ export default class Interaction {
 		return this.data?.options ?? [];
 	}
 
-	public async parse(data: APIInteraction) {
+	public async parse(data: APIGuildInteraction) {
 		if (this.client.users.cache.has(data.member.user.id)) {
 			this.author = this.client.users.cache.get(data.member.user.id)!;
 		} else {
@@ -128,6 +139,7 @@ export default class Interaction {
 		if (Array.isArray(message)) {
 			return message.map(msg => this.channel.messages.add(msg));
 		}
+		message.channel.send('');
 		return this.channel.messages.add(message);
 	}
 
@@ -164,7 +176,7 @@ export class InteractionParser {
 	}
 
 	private parseOptions(
-		options: APIApplicationCommandInteractionDataOption[],
+		options: any[],
 		all: any[] = [],
 		phrases: any[] = [],
 		flags: any[] = [],

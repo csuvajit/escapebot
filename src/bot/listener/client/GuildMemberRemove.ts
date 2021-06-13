@@ -22,7 +22,7 @@ export default class GuildMemberRemoveListener extends Listener {
 
 			const channel = member.guild.channels.cache.get(userLog);
 			if ((channel as TextChannel).permissionsFor(this.client.user!)?.has(['EMBED_LINKS', 'VIEW_CHANNEL', 'SEND_MESSAGES'])) {
-				return (channel as TextChannel).send({ embed });
+				return (channel as TextChannel).send({ embeds: [embed] });
 			}
 		}
 	}

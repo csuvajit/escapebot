@@ -34,7 +34,7 @@ export default class TagSearchCommand extends Command {
 				allTags.map(tag => `\`${tag.name}\``).join(', ')
 			].join('\n'));
 
-		return message.util!.send({ embed });
+		return message.util!.send({ embeds: [embed] });
 	}
 }
 

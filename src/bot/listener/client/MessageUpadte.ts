@@ -51,10 +51,11 @@ export default class MessageReactionRemoveListener extends Listener {
 			embed.addField('Message', `[Jump To](${newMessage.url})`, true);
 			embed.setTimestamp(oldMessage.editedAt || newMessage.editedAt || new Date()); // eslint-disable-line
 
-			return webhook.send(`${(newMessage.channel as Channel)!.toString()} (Message Update)`, {
+			return webhook.send({
 				embeds: [embed],
 				username: this.client.user!.username,
-				avatarURL: this.client.user!.displayAvatarURL()
+				avatarURL: this.client.user!.displayAvatarURL(),
+				content: `${(newMessage.channel as Channel)!.toString()} (Message Update)`
 			});
 		}
 	}

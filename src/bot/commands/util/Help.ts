@@ -29,7 +29,7 @@ export default class HelpCommand extends Command {
 				);
 			}
 
-			return message.util!.send({ embed });
+			return message.util!.send({ embeds: [embed] });
 		}
 
 		const embed = new MessageEmbed()
@@ -49,6 +49,6 @@ export default class HelpCommand extends Command {
 		const path = paths.slice(paths.indexOf('dist') + 1).join('/').replace(/.js/g, '.ts');
 		embed.addField('\u200e', `[View Source](https://github.com/csuvajit/escapebot/blob/master/src/${path})`);
 
-		return message.util!.send({ embed });
+		return message.util!.send({ embeds: [embed] });
 	}
 }

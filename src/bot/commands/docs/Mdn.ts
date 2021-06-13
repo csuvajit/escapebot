@@ -53,7 +53,7 @@ export default class MDNCommand extends Command {
 			.setURL(`https://developer.mozilla.org${data.mdn_url}`)
 			.setDescription(data.summary.replace(/\n/g, ''));
 
-		return message.util!.send({ embed });
+		return message.util!.send({ embeds: [embed] });
 	}
 
 	private parseQuery(query: string) {

@@ -49,6 +49,6 @@ export default class TagListCommand extends Command {
 			);
 		}
 
-		return message.util!.send({ embed });
+		return message.util!.send({ embeds: [embed] });
 	}
 }

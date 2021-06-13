@@ -3,8 +3,6 @@ import { Collection, ObjectId } from 'mongodb';
 import { COLLECTION } from '../util/Constants';
 import Client from './Client';
 
-export const num = 123456789123456789;
-
 export interface Case {
 	_id: ObjectId;
 	guild: Snowflake;

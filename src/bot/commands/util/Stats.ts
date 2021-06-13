@@ -44,6 +44,6 @@ export default class StatsCommand extends Command {
 			].join('\n'))
 			.setFooter(`© ${new Date().getFullYear()} ${user.tag}`, user.displayAvatarURL({ dynamic: true }));
 
-		return message.util!.send({ embed });
+		return message.util!.send({ embeds: [embed] });
 	}
 }

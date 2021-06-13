@@ -1,18 +1,18 @@
 import { AkairoClient, CommandHandler, ListenerHandler, InhibitorHandler, Command, Flag } from 'discord-akairo';
-import { APIApplicationCommandInteractionDataOption, APIInteraction } from 'discord-api-types/v8';
+import { APIApplicationCommandInteractionDataOption, APIGuildInteraction } from 'discord-api-types/v8';
 import Interaction, { InteractionParser } from './Interaction';
+import { Webhook, Intents, Snowflake } from 'discord.js';
 import SettingsProvider from './SettingsProvider';
 import RemindScheduler from './RemindScheduler';
-import { Webhook, Intents, Snowflake } from 'discord.js';
 import { SETTINGS } from '../util/Constants';
 import MuteScheduler from './MuteScheduler';
 import TagsProvider from './TagsProvider';
 import CaseHandler from './CaseHandler';
 import { Connection } from './Database';
+import Dialogflow from './Dialogflow';
 import Logger from '../util/Logger';
 import { Db } from 'mongodb';
 import path from 'path';
-import Dialogflow from './Dialogflow';
 
 declare module 'discord-akairo' {
 	interface AkairoClient {
@@ -77,8 +77,9 @@ export default class Client extends AkairoClient {
 			allowedMentions: { repliedUser: false, parse: ['users'] }
 		});
 
-		this.ws.on('INTERACTION_CREATE', async (res: APIInteraction) => {
+		this.ws.on('INTERACTION_CREATE', async (res: APIGuildInteraction) => {
 			const interaction = await new Interaction(this, res).parse(res);
+			// @ts-ignore
 			if (interaction.type === 3) return this.handleComponent(interaction, res);
 
 			const command = this.commandHandler.findCommand(res.data!.name);
@@ -110,14 +111,14 @@ export default class Client extends AkairoClient {
 		});
 	}
 
-	private async handleComponent(interaction: Interaction, res: APIInteraction) {
+	private async handleComponent(interaction: Interaction, res: APIGuildInteraction) {
 		// @ts-expect-error
 		if (['ROLE_ADD', 'ROLE_REMOVE'].includes(res.data.custom_id)) return this.addRole(interaction);
 		// @ts-expect-error
 		if (['ACCEPT_INTENT', 'REJECT_INTENT'].includes(res.data.custom_id)) return this.handleIntents(res, interaction);
 	}
 
-	private async handleIntents(res: APIInteraction, interaction: Interaction) {
+	private async handleIntents(res: APIGuildInteraction, interaction: Interaction) {
 		// @ts-expect-error
 		await this.api.interactions(res.id, res.token).callback.post({
 			data: {
