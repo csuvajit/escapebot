@@ -47,9 +47,11 @@ export default class UserInfoCommand extends Command {
 
 		if (devices.length) embed.addField('Device', `${devices.join(' ')}\u200b`);
 
+		// @ts-expect-error
 		const activities = user.presence.activities.filter(val => val.type !== 'CUSTOM_STATUS');
 		if (activities.length) embed.addField('Presence', activities.join(', '));
 
+		// @ts-expect-error
 		const customStatus = user.presence.activities.find(val => val.type === 'CUSTOM_STATUS');
 		if (customStatus) embed.addField('Custom Status', `${customStatus.emoji?.toString() ?? ''} ${customStatus.state ?? ''}\u200b`);
 

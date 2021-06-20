@@ -1,4 +1,3 @@
-import Interaction from '../../struct/Interaction';
 import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
@@ -39,7 +38,7 @@ export default class PingCommand extends Command {
 		return { user, reason, days };
 	}
 
-	public exec(message: Message | Interaction, args: any) {
+	public exec(message: Message, args: any) {
 		console.log(args);
 	}
 }

@@ -1,7 +1,7 @@
 import { Message } from 'discord.js';
 import { Listener } from 'discord-akairo';
-// @ts-ignore
-import credentials from '../../../../credentials.json';
+// eslint-disable-next-line
+const credentials = require('../../../../../credentials.json');
 import { SessionsClient } from '@google-cloud/dialogflow';
 import * as uuid from 'uuid';
 
@@ -15,7 +15,7 @@ export default class MessageListener extends Listener {
 	}
 
 	public async exec(message: Message) {
-		if (!['736861685704425503', '847905466322780230'].includes(message.channel.id)) return;
+		if (!['uwu'].includes(message.channel.id)) return; // keep it disabled for now?
 		if (message.author.bot) return;
 		if (!message.content) return;
 
