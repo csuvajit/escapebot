@@ -60,7 +60,7 @@ export default class Client extends AkairoClient {
 
 	public constructor() {
 		super({
-			intents: Intents.ALL,
+			intents: Object.values(Intents.FLAGS),
 			ownerID: process.env.OWNER as Snowflake,
 			partials: ['MESSAGE', 'CHANNEL', 'REACTION'],
 			allowedMentions: { repliedUser: false, parse: ['users'] }

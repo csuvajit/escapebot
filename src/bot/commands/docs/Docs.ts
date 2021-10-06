@@ -55,7 +55,7 @@ export default class DocsCommand extends Command {
 
 		delete body.color;
 		const embed = new MessageEmbed(body);
-		if (message.channel.type === 'dm' || !(message.channel as TextChannel)!.permissionsFor(message.guild!.me!)!.has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
+		if (message.channel.type === 'DM' || !(message.channel as TextChannel)!.permissionsFor(message.guild!.me!)!.has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
 			return message.util!.send({ embeds: [embed] });
 		}
 
@@ -65,8 +65,10 @@ export default class DocsCommand extends Command {
 		let react;
 		try {
 			react = await msg.awaitReactions(
-				(reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
-				{ max: 1, time: 30000, errors: ['time'] }
+				{
+					filter: (reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
+					max: 1, time: 30000, errors: ['time']
+				}
 			);
 		} catch (error) {
 			return msg.reactions.removeAll();

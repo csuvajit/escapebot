@@ -7,14 +7,12 @@ export default class TagAddCommand extends Command {
 			category: 'tag',
 			channel: 'guild',
 			clientPermissions: ['EMBED_LINKS'],
-			flags: ['--pin'],
-			optionFlags: ['--name', '--content']
+			flags: ['--pin']
 		});
 	}
 
-	public *args(msg: Message): unknown {
+	public *args(): unknown {
 		const name = yield {
-			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
 			type: async (msg: Message, name: string) => {
 				if (!name) return null;
 				const tag = await this.client.tags.find(name, msg.guild!.id);
@@ -24,12 +22,11 @@ export default class TagAddCommand extends Command {
 			prompt: {
 				start: 'What should be the name of tag?',
 				retry: (msg: Message, { failure }: { failure: { value: string } }) => `Tag with the name **${failure.value}** already exists. Try another name?`
-			},
-			flag: '--name'
+			}
 		};
 
 		const content = yield {
-			match: msg.hasOwnProperty('token') ? 'option' : 'rest',
+			match: 'rest',
 			type: 'string',
 			flag: '--content'
 		};

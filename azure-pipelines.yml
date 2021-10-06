@@ -1,8 +1,12 @@
 trigger:
-  - master
+ branches:
+  include:
+    - master
+
+pr: none
 
 pool:
-  vmImage: 'Ubuntu-18.04'
+  vmImage: 'Ubuntu-20.04'
 
 jobs:
   - job: Build
@@ -34,7 +38,7 @@ jobs:
     displayName: Production
     dependsOn: Build
     pool:
-      vmImage: 'Ubuntu-18.04'
+      vmImage: 'Ubuntu-20.04'
     environment:
       name: Linux
       resourceType: VirtualMachine
@@ -59,4 +63,4 @@ jobs:
                cd ~/escapebot
                pm2 delete escape
                pm2 start dist/src/index.js --name escape
-              displayName: 'Run Application'
+              displayName: 'Start Application'

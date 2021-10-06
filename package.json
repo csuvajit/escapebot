@@ -6,7 +6,6 @@
 	"author": "SUVAJIT <suvajit.me@gmail.com>",
 	"license": "MIT",
 	"private": "true",
-	"typings": "typings/index.d.ts",
 	"scripts": {
 		"build": "tsc",
 		"start": "node --enable-source-maps dist/src/index.js",
@@ -20,7 +19,7 @@
 		"chalk": "^4.1.0",
 		"diff": "^5.0.0",
 		"discord-akairo": "github:csuvajit/discord-akairo#main",
-		"discord.js": "^13.0.0-dev.1f8f3ab0f8dbd346154bbfa14a98726b8df25d57",
+		"discord.js": "^13.2.0",
 		"dotenv": "^8.2.0",
 		"moment": "^2.29.1",
 		"moment-duration-format": "^2.3.2",
@@ -38,11 +37,11 @@
 		"@types/node": "^14.14.20",
 		"@types/node-emoji": "^1.8.1",
 		"@types/node-fetch": "^2.5.7",
-		"@types/uuid": "^8.3.0",
-		"@typescript-eslint/eslint-plugin": "^4.13.0",
-		"@typescript-eslint/parser": "^4.13.0",
-		"eslint": "^7.17.0",
+		"@types/uuid": "^8.3.1",
+		"@typescript-eslint/eslint-plugin": "^4.33.0",
+		"@typescript-eslint/parser": "^4.33.0",
+		"eslint": "^7.32.0",
 		"eslint-config-marine": "^7.2.0",
-		"typescript": "^4.2.4"
+		"typescript": "^4.4.3"
 	}
 }

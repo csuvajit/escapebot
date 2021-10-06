@@ -6,15 +6,14 @@ export default class TagSearchCommand extends Command {
 		super('tag-search', {
 			category: 'tag',
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS'],
-			optionFlags: ['--name']
+			clientPermissions: ['EMBED_LINKS']
 		});
 	}
 
-	public *args(msg: Message): unknown {
+	public *args(): unknown {
 		const name = yield {
 			'type': 'string',
-			'match': msg.hasOwnProperty('token') ? 'option' : 'content',
+			'match': 'content',
 			'flag': ['--name'],
 			'default': ''
 		};

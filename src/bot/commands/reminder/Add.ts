@@ -53,7 +53,7 @@ export default class ReminderAddCommand extends Command {
 			reason: Util.cleanContent(reason, message.channel),
 			reference: message.url,
 			duration: new Date(Date.now() + duration),
-			dm: message.channel.type === 'dm' || dm,
+			dm: message.channel.type === 'DM' || dm,
 			createdAt: new Date()
 		});
 

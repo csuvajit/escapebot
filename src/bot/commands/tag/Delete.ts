@@ -6,16 +6,14 @@ export default class TagDeleteCommand extends Command {
 		super('tag-delete', {
 			category: 'tag',
 			channel: 'guild',
-			description: {},
-			optionFlags: ['--name']
+			description: {}
 		});
 	}
 
-	public *args(msg: Message): unknown {
+	public *args(): unknown {
 		const name = yield {
-			match: msg.hasOwnProperty('token') ? 'option' : 'content',
-			type: 'lowercase',
-			flag: '--name'
+			match: 'content',
+			type: 'lowercase'
 		};
 
 		return { name };

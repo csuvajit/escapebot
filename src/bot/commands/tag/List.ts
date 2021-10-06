@@ -7,16 +7,13 @@ export default class TagListCommand extends Command {
 			aliases: ['tags'],
 			category: 'tag',
 			channel: 'guild',
-			clientPermissions: ['EMBED_LINKS'],
-			optionFlags: ['--user']
+			clientPermissions: ['EMBED_LINKS']
 		});
 	}
 
-	public *args(msg: Message): unknown {
+	public *args(): unknown {
 		const user = yield {
 			'type': 'user',
-			'match': msg.hasOwnProperty('token') ? 'option' : 'phrase',
-			'flag': ['--user'],
 			'default': (message: Message) => message.author
 		};
 

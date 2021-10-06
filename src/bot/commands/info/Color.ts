@@ -119,7 +119,7 @@ export default class ColorCommand extends Command {
 		return message.channel.send({
 			embeds: [
 				{
-					color: hex,
+					color: hex ? parseInt(hex, 16) : undefined,
 					fields: [
 						{ name: 'Hex Code', value: `\`${hex}\`` },
 						{ name: 'RGB Code', value: `\`${rgb}\`` },

@@ -1,19 +1,18 @@
 import { Command, Argument } from 'discord-akairo';
-import { Message, User, MessageEmbed, Snowflake } from 'discord.js';
+import { Message, User, MessageEmbed } from 'discord.js';
 
 class AvatarCommand extends Command {
-
 	public constructor() {
 		super('avatar', {
 			aliases: ['avatar', 'av'],
 			category: 'utility',
-      typing: true,
+			typing: true,
 			clientPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
 			args: [
 				{
-					id: 'user',
-					type: Argument.union('user', (_, id) => id ? this.client.users.fetch(id as Snowflake).catch(() => null) : null),
-					default: (message: Message) => message.author
+					'id': 'user',
+					'type': Argument.union('user', (_, id) => id ? this.client.users.fetch(id).catch(() => null) : null),
+					'default': (message: Message) => message.author
 				}
 			],
 			description: {
@@ -31,7 +30,7 @@ class AvatarCommand extends Command {
 
 		const format = user.displayAvatarURL({ dynamic: true }).substr(user.displayAvatarURL({ dynamic: true }).length - 3);
 
-    if (format === 'gif') {
+		if (format === 'gif') {
 			avatarEmbed.setAuthor(`${user.tag} (${user.id})`);
 			avatarEmbed.setDescription(`[gif](${user.displayAvatarURL({ format: 'gif', size: 2048 })})`);
 			avatarEmbed.setImage(user.displayAvatarURL({ format: 'gif', size: 2048 }));
@@ -43,7 +42,6 @@ class AvatarCommand extends Command {
 
 		return message.util!.send({ embeds: [avatarEmbed] });
 	}
-
 }
 
 export default AvatarCommand;
