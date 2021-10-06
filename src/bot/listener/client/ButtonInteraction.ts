@@ -12,13 +12,13 @@ export default class MessageListener extends Listener {
 	}
 
 	public async exec(interaction: Interaction) {
-		if (!interaction.isButton() || !interaction.guildID) return;
-		if (!['ROLE_ADD', 'ROLE_REMOVE'].includes(interaction.customID)) return;
+		if (!interaction.isButton() || !interaction.guildId) return;
+		if (!['ROLE_ADD', 'ROLE_REMOVE'].includes(interaction.customId)) return;
 		const roleID = this.client.settings.get<Snowflake>(interaction.guild!, SETTINGS.REACTION_ROLE, '807254345526804522');
 		if (!interaction.guild!.roles.cache.has(roleID)) return;
 
 		const member = interaction.member as GuildMember;
-		if (interaction.customID === 'ROLE_ADD') {
+		if (interaction.customId === 'ROLE_ADD') {
 			if (!member.roles.cache.has(roleID)) {
 				await member.roles.add(roleID).catch(() => null);
 			}

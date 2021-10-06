@@ -1,8 +1,6 @@
 import { Command, Argument } from 'discord-akairo';
-import { Message, User, Snowflake } from 'discord.js';
+import { Message, User } from 'discord.js';
 import moment from 'moment';
-
-const DEVICES: { [key: string]: string } = { desktop: '🖥️', mobile: '📱', web: '🌐' };
 
 export default class UserInfoCommand extends Command {
 	public constructor() {
@@ -14,7 +12,7 @@ export default class UserInfoCommand extends Command {
 			args: [
 				{
 					'id': 'user',
-					'type': Argument.union('user', (_, id: string) => id ? this.client.users.fetch(id as Snowflake).catch(() => null) : null),
+					'type': Argument.union('user', (_, id: string) => id ? this.client.users.fetch(id).catch(() => null) : null),
 					'default': (message: Message) => message.author
 				}
 			]
@@ -39,13 +37,7 @@ export default class UserInfoCommand extends Command {
 				);
 			}
 		}
-		embed.addField('Created', moment.utc(user.createdAt).format('MMMM D, YYYY, kk:mm:ss'))
-			.addField('Status', user.presence.status.toUpperCase());
-
-		const devices = Object.keys(user.presence.clientStatus ?? {})
-			.map(key => (DEVICES[key]));
-
-		if (devices.length) embed.addField('Device', `${devices.join(' ')}\u200b`);
+		embed.addField('Created', moment.utc(user.createdAt).format('MMMM D, YYYY, kk:mm:ss'));
 
 		// @ts-expect-error
 		const activities = user.presence.activities.filter(val => val.type !== 'CUSTOM_STATUS');
@@ -53,9 +45,9 @@ export default class UserInfoCommand extends Command {
 
 		// @ts-expect-error
 		const customStatus = user.presence.activities.find(val => val.type === 'CUSTOM_STATUS');
-		if (customStatus) embed.addField('Custom Status', `${customStatus.emoji?.toString() ?? ''} ${customStatus.state ?? ''}\u200b`);
+		if (customStatus) embed.addField('Custom Status', `${(customStatus.emoji?.toString() ?? '') as string} ${(customStatus.state ?? '') as string}\u200b`);
 
-		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
+		if (message.channel.type === 'DM' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
 			return message.util!.send({ embeds: [embed] });
 		}
 
@@ -65,8 +57,7 @@ export default class UserInfoCommand extends Command {
 		let react;
 		try {
 			react = await msg.awaitReactions(
-				(reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
-				{ max: 1, time: 30000, errors: ['time'] }
+				{ max: 1, time: 30000, errors: ['time'], filter: (reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id }
 			);
 		} catch (error) {
 			return msg.reactions.removeAll();

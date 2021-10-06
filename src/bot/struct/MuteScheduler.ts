@@ -16,7 +16,7 @@ export default class MuteScheduler {
 
 	public async init() {
 		await this._refresh();
-		this.client.setInterval(this._refresh.bind(this), this.refreshRate);
+		setInterval(this._refresh.bind(this), this.refreshRate);
 	}
 
 	public async add(mute: Case) {
@@ -29,7 +29,7 @@ export default class MuteScheduler {
 	private queue(mute: Case) {
 		this.queued.set(
 			mute._id.toHexString(),
-			this.client.setTimeout(() => {
+			setTimeout(() => {
 				this.trigger(mute);
 			}, mute.duration!.getTime() - Date.now())
 		);
@@ -37,7 +37,7 @@ export default class MuteScheduler {
 
 	private cancel(mute: Case) {
 		const timeoutId = this.queued.get(mute._id.toHexString());
-		if (timeoutId) this.client.clearTimeout(timeoutId);
+		if (timeoutId) clearTimeout(timeoutId);
 		this.queued.delete(mute._id.toHexString());
 		return this.collection.updateOne({ _id: mute._id }, { $set: { processed: true } });
 	}

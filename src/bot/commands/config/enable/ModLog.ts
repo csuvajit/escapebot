@@ -8,16 +8,13 @@ export default class ConfigEnableModLogCommand extends Command {
 			category: 'config',
 			clientPermissions: ['EMBED_LINKS'],
 			typing: true,
-			description: {},
-			optionFlags: ['--channel']
+			description: {}
 		});
 	}
 
-	public *args(msg: Message): unknown {
+	public *args(): unknown {
 		const channel = yield {
-			type: 'textChannel',
-			match: msg.hasOwnProperty('token') ? 'option' : 'phrase',
-			flag: '--channel'
+			type: 'textChannel'
 		};
 
 		return { channel };

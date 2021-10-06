@@ -41,6 +41,6 @@ export default class PurgeCommand extends Command {
 
 	public async exec(message: Message, { user, start, end }: { user?: User; start: number; end: number }) {
 		const messages = await message.channel.messages.fetch({ limit: 100 });
-		return (message.channel as TextChannel).bulkDelete(messages.filter(msg => user ? msg.author.id === user.id : true).array().slice(start, end), true);
+		return (message.channel as TextChannel).bulkDelete(messages.filter(msg => user ? msg.author.id === user.id : true).toJSON().slice(start, end), true);
 	}
 }

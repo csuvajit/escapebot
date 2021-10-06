@@ -1,6 +1,6 @@
 import { Command } from 'discord-akairo';
 import { utc } from 'moment';
-import { MessageEmbed, GuildEmoji, Message, Snowflake } from 'discord.js';
+import { MessageEmbed, GuildEmoji, Message } from 'discord.js';
 import { find, Emoji } from 'node-emoji';
 
 const EMOJI_REGEX = /<(?:a)?:(?:\w{2,32}):(\d{17,19})>?/;
@@ -23,7 +23,7 @@ export default class EmojiCommand extends Command {
 					match: 'content',
 					type: (message, name) => {
 						const matched = EMOJI_REGEX.exec(name)?.[1];
-						if (matched) return message.guild!.emojis.cache.get(matched as Snowflake);
+						if (matched) return message.guild!.emojis.cache.get(matched);
 						const emoji = find(name);
 						if (emoji) return emoji; // eslint-disable-line
 						return message.guild!.emojis.cache.find(e => e.name!.toLowerCase() === name);
@@ -56,7 +56,7 @@ export default class EmojiCommand extends Command {
 				.addField('Raw', `\\${emoji.emoji}`);
 		}
 
-		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
+		if (message.channel.type === 'DM' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
 			return message.util!.send({ embeds: [embed] });
 		}
 
@@ -66,8 +66,7 @@ export default class EmojiCommand extends Command {
 		let react;
 		try {
 			react = await msg.awaitReactions(
-				(reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
-				{ max: 1, time: 30000, errors: ['time'] }
+				{ filter: (reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id, max: 1, time: 30000, errors: ['time'] }
 			);
 		} catch (error) {
 			return msg.reactions.removeAll();

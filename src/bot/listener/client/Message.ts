@@ -5,11 +5,11 @@ const credentials = require('../../../../../credentials.json');
 import { SessionsClient } from '@google-cloud/dialogflow';
 import * as uuid from 'uuid';
 
-export default class MessageListener extends Listener {
+export default class MessageCreateListener extends Listener {
 	public constructor() {
-		super('message', {
+		super('messageCreate', {
 			emitter: 'client',
-			event: 'message',
+			event: 'messageCreate',
 			category: 'client'
 		});
 	}

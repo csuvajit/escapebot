@@ -72,7 +72,7 @@ export default class RoleInfoCommad extends Command {
 			.addField('Creation Date', `${moment.utc(role.createdAt).format('MMMM D, YYYY, kk:mm:ss')}`)
 			.addField('Permissions', `${permissions.includes('ADMINISTRATOR') ? '\`Administrator\`' : permission || 'None'}`);
 
-		if (message.channel.type === 'dm' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
+		if (message.channel.type === 'DM' || !message.channel.permissionsFor(message.guild!.me!).has(['ADD_REACTIONS', 'MANAGE_MESSAGES'], false)) {
 			return message.util!.send({ embeds: [embed] });
 		}
 
@@ -82,8 +82,7 @@ export default class RoleInfoCommad extends Command {
 		let react;
 		try {
 			react = await msg.awaitReactions(
-				(reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id,
-				{ max: 1, time: 30000, errors: ['time'] }
+				{ filter: (reaction, user) => reaction.emoji.name === '🗑' && user.id === message.author.id, max: 1, time: 30000, errors: ['time'] }
 			);
 		} catch (error) {
 			return msg.reactions.removeAll();

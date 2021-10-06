@@ -20,8 +20,7 @@ export default class TagShowCommand extends Command {
 				const tag = await this.client.tags.find(name, msg.guild!.id);
 				if (!tag) return Flag.cancel();
 				return tag;
-			},
-			flag: ['--name']
+			}
 		};
 
 		return { tag };

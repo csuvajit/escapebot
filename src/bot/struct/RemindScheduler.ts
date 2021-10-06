@@ -27,7 +27,7 @@ export default class RemindScheduler {
 
 	public async init() {
 		await this._refresh();
-		this.client.setInterval(this._refresh.bind(this), this.refreshRate);
+		setInterval(this._refresh.bind(this), this.refreshRate);
 	}
 
 	public async create(reminder: Omit<Reminder, '_id'>) {
@@ -49,7 +49,7 @@ export default class RemindScheduler {
 	private queue(reminder: Reminder) {
 		this.queued.set(
 			reminder._id.toHexString(),
-			this.client.setTimeout(() => {
+			setTimeout(() => {
 				this.trigger(reminder);
 			}, reminder.duration.getTime() - Date.now())
 		);
@@ -57,7 +57,7 @@ export default class RemindScheduler {
 
 	private async delete(reminder: Reminder) {
 		const timeoutId = this.queued.get(reminder._id.toHexString());
-		if (timeoutId) this.client.clearTimeout(timeoutId);
+		if (timeoutId) clearTimeout(timeoutId);
 		this.queued.delete(reminder._id.toHexString());
 		return this.collection.deleteOne({ _id: reminder._id });
 	}

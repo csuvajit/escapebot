@@ -13,7 +13,7 @@ export default class MessageReactionRemoveListener extends Listener {
 	}
 
 	public exec(oldMessage: Message, newMessage: Message) {
-		if (newMessage.partial || oldMessage.author.bot || newMessage.author.bot) return; // eslint-disable-line
+		if (newMessage.partial || newMessage.author.bot) return; // eslint-disable-line
 		if (Util.escapeMarkdown(oldMessage.content) === Util.escapeMarkdown(newMessage.content)) return;
 		const webhookID = this.client.settings.get<string>(newMessage.guild!, SETTINGS.WEBHOOK_LOG);
 		if (webhookID) {

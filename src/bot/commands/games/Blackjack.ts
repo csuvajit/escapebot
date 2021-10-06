@@ -37,18 +37,20 @@ export default class BlackJackCommand extends Command {
 			let selection: 'hit' | 'stand' | undefined = undefined;
 			try {
 				await m.awaitReactions(
-					(r: MessageReaction, u: User) => {
-						r.users.remove(u);
-						if (u.id !== message.author.id) return false;
-						if (!emojis.includes(r.emoji.name as string)) return false;
+					{
+						filter: (r: MessageReaction, u: User) => {
+							r.users.remove(u);
+							if (u.id !== message.author.id) return false;
+							if (!emojis.includes(r.emoji.name as string)) return false;
 
-						if (r.emoji.name === emojis[0]) selection = 'hit';
-						else selection = 'stand';
-						return true;
-					},
-					{ errors: ['time'], time: 3e4, max: 1 }
+							if (r.emoji.name === emojis[0]) selection = 'hit';
+							else selection = 'stand';
+							return true;
+						},
+						errors: ['time'], time: 3e4, max: 1
+					}
 				);
-			} catch {}
+			} catch { }
 
 			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			if (!selection) {
@@ -83,9 +85,9 @@ export default class BlackJackCommand extends Command {
 		if (winOrBust) show = true;
 
 		const getColor = () => {
-			if (dealerComment.includes('Won')) return '#FF0000';
-			if (playerComment.includes('Won')) return '#00FF00';
-			return '#00000';
+			if (dealerComment.includes('Won')) return 0xFF0000;
+			if (playerComment.includes('Won')) return 0x00FF00;
+			return 0x00000;
 		};
 
 		return {
