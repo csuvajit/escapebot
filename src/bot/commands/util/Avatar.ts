@@ -1,5 +1,5 @@
 import { Command, Argument } from 'discord-akairo';
-import { Message, User, MessageEmbed } from 'discord.js';
+import { Message, User, MessageEmbed, Snowflake } from 'discord.js';
 
 class AvatarCommand extends Command {
 
@@ -12,7 +12,7 @@ class AvatarCommand extends Command {
 			args: [
 				{
 					id: 'user',
-					type: Argument.union('user', (_, id) => id ? this.client.users.fetch(id).catch(() => null) : null),
+					type: Argument.union('user', (_, id) => id ? this.client.users.fetch(id as Snowflake).catch(() => null) : null),
 					default: (message: Message) => message.author
 				}
 			],
