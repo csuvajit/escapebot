@@ -3,8 +3,10 @@ import { Command } from 'discord-akairo';
 import { Message } from 'discord.js';
 
 interface Args {
-	type: 'hex' | 'rgb' | 'hsl';
-	colors: Record<string, string | number>;
+	color: {
+		type: 'hex' | 'rgb' | 'hsl';
+		colors: Record<string, string | number>;
+	};
 }
 
 export default class ColorCommand extends Command {
@@ -37,7 +39,7 @@ export default class ColorCommand extends Command {
 		});
 	}
 
-	public exec(message: Message, { colors, type }: Args) {
+	public exec(message: Message, { color: { colors, type } }: Args) {
 		// Converter functions.
 		const rgbToHex = ({ r, g, b }: Record<string, number>) => ({
 			r: r.toString(16),
@@ -56,15 +58,16 @@ export default class ColorCommand extends Command {
 
 			// Find colors with same hue and chroma on the RGB cube.
 			let rgb1 = [] as Array<number>;
-			if (h1 >= 0 || h1 < 1 || h1 === 6) rgb1 = [c, x, 0];
-			else if (h1 >= 1 || h1 < 2) rgb1 = [x, c, 0];
-			else if (h1 >= 2 || h1 < 3) rgb1 = [0, c, x];
-			else if (h1 >= 3 || h1 < 4) rgb1 = [0, x, c];
-			else if (h1 >= 4 || h1 < 5) rgb1 = [x, 0, c];
-			else if (h1 >= 5 || h1 < 6) rgb1 = [c, 0, x];
+			if ((h1 >= 0 && h1 < 1) || h1 === 6) rgb1 = [c, x, 0];
+			else if (h1 >= 1 && h1 < 2) rgb1 = [x, c, 0];
+			else if (h1 >= 2 && h1 < 3) rgb1 = [0, c, x];
+			else if (h1 >= 3 && h1 < 4) rgb1 = [0, x, c];
+			else if (h1 >= 4 && h1 < 5) rgb1 = [x, 0, c];
+			else if (h1 >= 5 && h1 < 6) rgb1 = [c, 0, x];
 
 			const m = l - c / 2; // Matching factor.
 			const [r, g, b] = rgb1.map(a => Math.round((a + m) * 255));
+			console.log([h, s, l], [r, g, b]);
 			return { r, g, b };
 		};
 		const rgbToHSL = ({ r, g, b }: Record<string, number>) => {
@@ -119,7 +122,7 @@ export default class ColorCommand extends Command {
 		return message.channel.send({
 			embeds: [
 				{
-					color: hex ? parseInt(hex, 16) : undefined,
+					color: hex ? parseInt(hex.slice(1), 16) : undefined,
 					fields: [
 						{ name: 'Hex Code', value: `\`${hex}\`` },
 						{ name: 'RGB Code', value: `\`${rgb}\`` },
