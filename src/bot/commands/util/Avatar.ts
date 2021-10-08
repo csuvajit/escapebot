@@ -5,7 +5,7 @@ class AvatarCommand extends Command {
 	public constructor() {
 		super('avatar', {
 			aliases: ['avatar', 'av'],
-			category: 'utility',
+			category: 'util',
 			typing: true,
 			clientPermissions: ['SEND_MESSAGES', 'ATTACH_FILES'],
 			args: [
