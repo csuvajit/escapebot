@@ -1,5 +1,5 @@
 import { Command, Argument } from 'discord-akairo';
-import { Message, User, TextChannel } from 'discord.js';
+import { Message, User, TextChannel, Webhook } from 'discord.js';
 
 export default class PurgeCommand extends Command {
 	public constructor() {
@@ -17,7 +17,10 @@ export default class PurgeCommand extends Command {
 				},
 				{
 					id: 'user',
-					type: 'user',
+					type: Argument.union('user', async (msg, id) => {
+						const webhooks = await msg.guild?.fetchWebhooks();
+						return webhooks?.get(id) ?? null;
+					}),
 					prompt: {
 						retry: 'Specify a valid User ID!',
 						optional: true
@@ -39,7 +42,7 @@ export default class PurgeCommand extends Command {
 		});
 	}
 
-	public async exec(message: Message, { user, start, end }: { user?: User; start: number; end: number }) {
+	public async exec(message: Message, { user, start, end }: { user?: User | Webhook; start: number; end: number }) {
 		const messages = await message.channel.messages.fetch({ limit: 100 });
 		return (message.channel as TextChannel).bulkDelete(messages.filter(msg => user ? msg.author.id === user.id : true).toJSON().slice(start, end), true);
 	}
