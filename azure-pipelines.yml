@@ -40,7 +40,7 @@ jobs:
     pool:
       vmImage: 'Ubuntu-20.04'
     environment:
-      name: Linux
+      name: Ubuntu-VM
       resourceType: VirtualMachine
       tags: web
     strategy:
