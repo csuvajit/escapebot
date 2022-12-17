@@ -1,0 +1,14 @@
+version: "3.6"
+
+services:
+  escape_bot:
+    image: escape_bot
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    mem_limit: 3gb
+    container_name: escape_bot
+
