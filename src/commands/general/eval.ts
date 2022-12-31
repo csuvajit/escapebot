@@ -8,7 +8,7 @@ import { inspect } from 'node:util';
 
 @ApplyOptions<Command.Options>({
     aliases: ['e'],
-    description: 'Evals any JavaScript code',
+    description: 'Eval any JavaScript code?',
     quotes: [],
     preconditions: ['OwnerOnly'],
     flags: ['async', 'hidden', 'showHidden', 'silent', 's'],
