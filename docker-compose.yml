@@ -11,4 +11,3 @@ services:
       - .env
     mem_limit: 1gb
     container_name: escape_bot
-

@@ -1,35 +1,9 @@
 {
+	"extends": "@sapphire/ts-config",
 	"compilerOptions": {
-		"lib": [
-			"ES2020",
-			"esnext",
-			"esnext.array",
-			"esnext.asynciterable",
-			"esnext.intl",
-			"esnext.symbol"
-		],
-		"pretty": true,
-		"strict": true,
+		"rootDir": "src",
 		"outDir": "dist",
-		"rootDir": "./",
-		"sourceRoot": "/",
-		"sourceMap": true,
-		"target": "ES2020",
-		"module": "CommonJS",
-		"inlineSources": true,
-		"declaration": false,
-		"alwaysStrict": true,
-		"skipLibCheck": true,
-		"esModuleInterop": true,
-		"removeComments": false,
-		"resolveJsonModule": true,
-		"moduleResolution": "node",
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"allowSyntheticDefaultImports": true,
-		"forceConsistentCasingInFileNames": true
+		"tsBuildInfoFile": "dist/.tsbuildinfo"
 	},
-	"include": [
-		"src"
-	]
+	"include": ["src"]
 }
