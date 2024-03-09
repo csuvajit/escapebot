@@ -4,27 +4,26 @@ import { MongoClient } from 'mongodb';
 import Settings from './struct/SettingsProvider';
 import { RewriteFrames } from '@sentry/integrations';
 import * as Sentry from '@sentry/node';
-import { execSync } from 'child_process';
 
-if (process.env.SENTRY_DSN) {
-	Sentry.init({
-		dsn: process.env.SENTRY_DSN,
-		serverName: 'escape_bot',
-		environment: process.env.NODE_ENV ?? 'development',
-		release: execSync('git rev-parse HEAD').toString().trim(),
-		integrations: [
-			new RewriteFrames({
-				iteratee(frame) {
-					if (frame.filename) {
-						const filename = frame.filename.replace(process.cwd(), '');
-						frame.filename = filename.replace(/\\/g, '/');
-					}
-					return frame;
-				}
-			}),
-			new Sentry.Integrations.Http({ tracing: true, breadcrumbs: true })
-		]
-	});
+if (process.env.SENTRY_DSN && process.env.GIT_SHA) {
+    Sentry.init({
+        dsn: process.env.SENTRY_DSN,
+        serverName: 'escape_bot',
+        environment: process.env.NODE_ENV ?? 'development',
+        release: process.env.GIT_SHA,
+        integrations: [
+            new RewriteFrames({
+                iteratee(frame) {
+                    if (frame.filename) {
+                        const filename = frame.filename.replace(process.cwd(), '');
+                        frame.filename = filename.replace(/\\/g, '/');
+                    }
+                    return frame;
+                }
+            }),
+            new Sentry.Integrations.Http({ tracing: true, breadcrumbs: true })
+        ]
+    });
 }
 
 class Client extends SapphireClient {
@@ -36,14 +35,7 @@ class Client extends SapphireClient {
                 level: LogLevel.Debug
             },
             shards: 'auto',
-            intents: [
-                'GUILDS',
-                'GUILD_MEMBERS',
-                'GUILD_PRESENCES',
-                'GUILD_BANS',
-				'MESSAGE_CONTENT',
-                'GUILD_MESSAGES'
-            ],
+            intents: ['GUILDS', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_BANS', 'MESSAGE_CONTENT', 'GUILD_MESSAGES'],
             partials: ['CHANNEL', 'MESSAGE'],
             loadMessageCommandListeners: true
         });
@@ -56,7 +48,7 @@ class Client extends SapphireClient {
         client.logger.info('Connected to MongoDB');
 
         container.settings = new Settings(container.db);
-		await container.settings.init();
+        await container.settings.init();
 
         container.webhooks = new Map();
 

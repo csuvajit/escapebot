@@ -2,11 +2,11 @@ version: "3.6"
 
 services:
   escape_bot:
-    image: escape_bot
+    image: 432159388664.dkr.ecr.us-east-1.amazonaws.com/escapebot
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     env_file:
       - .env
     mem_limit: 1gb

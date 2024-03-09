@@ -6,7 +6,7 @@ import { Collections, Settings } from '../lib/constants';
 @ApplyOptions<Listener.Options>({ event: 'guildMemberAdd' })
 export class GuildMemberAdd extends Listener {
     public async run(member: GuildMember) {
-        this.performRoleState(member);
+        setTimeout(() => this.performRoleState(member), 5000);
         this.performGuildMemberAdd(member);
     }
 

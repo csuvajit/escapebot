@@ -8,7 +8,7 @@ export class GuildMemberUpdate extends Listener {
     public async run(oldMember: GuildMember, newMember: GuildMember) {
         this.updateRoleState(newMember);
         if (oldMember.pending && !newMember.pending) {
-            this.performRoleState(newMember);
+            setTimeout(() => this.performRoleState(newMember), 5000);
         }
     }
 
