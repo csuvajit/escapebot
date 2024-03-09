@@ -2,7 +2,7 @@ version: "3.6"
 
 services:
   escape_bot:
-    image: 432159388664.dkr.ecr.us-east-1.amazonaws.com/escapebot
+    image: 432159388664.dkr.ecr.us-east-1.amazonaws.com/escape-bot
     restart: always
     # build:
     #   context: .
