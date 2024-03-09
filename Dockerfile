@@ -27,4 +27,4 @@ COPY --from=deps /app/dist ./dist
 ARG GIT_SHA
 ENV GIT_SHA=$GIT_SHA
 
-CMD ["node", "--trace-warnings", "--enable-source-maps", "dist/src/index.js"]
+CMD ["node", "--trace-warnings", "--enable-source-maps", "dist/index.js"]
