@@ -1,6 +1,8 @@
-FROM node:18-alpine AS deps
+FROM node:16-slim AS deps
 
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y git build-essential python3
 
 COPY package*.json ./
 
@@ -10,8 +12,11 @@ COPY . .
 
 RUN npm run build
 
-FROM node:18-alpine AS runner
+FROM node:16-slim AS runner
+
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y git build-essential python3
 
 COPY package*.json ./
 
